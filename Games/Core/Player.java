@@ -1,3 +1,5 @@
+package Games.Core;
+
 public class Player {
   private String name;
   private int moves;

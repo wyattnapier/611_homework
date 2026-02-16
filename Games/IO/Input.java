@@ -1,4 +1,4 @@
-package IO;
+package Games.IO;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -22,7 +22,7 @@ public class Input {
       if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("n")) {
         return input;
       } else {
-        System.out.println("Invalid input. Please enter 'y' for yes or 'n' for no.");
+        System.out.println("\nInvalid input. Please enter 'y' for yes or 'n' for no.");
         return getPlayAgainInputString(); // recursively call until valid input is received
       }
     }
@@ -30,17 +30,18 @@ public class Input {
 
   public String getGameSelectionInput(String playerName, Map<String, String> gameOptions) {
     while (true) {
-      StringBuilder prompt = new StringBuilder("Hi " + playerName + "! Which game would you like to play? ");
+      StringBuilder prompt = new StringBuilder("\nHi " + playerName + "! Which game would you like to play? ");
       StringBuilder optionsPrompt = new StringBuilder();
       for (Map.Entry<String, String> entry : gameOptions.entrySet()) {
-        optionsPrompt.append("Enter '").append(entry.getKey()).append("' for ").append(entry.getValue()).append(": ");
+        optionsPrompt.append("\nEnter '").append(entry.getKey()).append("' for ").append(entry.getValue());
       }
+      optionsPrompt.append("\nYour selection: ");
       String input = getStringInput(prompt.toString() + optionsPrompt.toString());
       if (gameOptions.containsKey(input.toLowerCase())) {
         return input;
       } else {
         System.out.println(
-            "Invalid game selection. " + "Please enter one of the following options: " + optionsPrompt.toString());
+            "\nInvalid game selection. " + "Please enter one of the following options: " + optionsPrompt.toString());
         return getGameSelectionInput(playerName, gameOptions); // recursively call until valid input is received
       }
     }
@@ -54,8 +55,8 @@ public class Input {
       scanner.nextLine(); // consume the newline
       return output;
     } catch (Exception e) {
-      System.err.println("Invalid input. Please enter a valid integer."); // not actual error handling for user input,
-                                                                          // just a message to the programmer
+      System.err.println("\nInvalid input. Please enter a valid integer."); // not actual error handling for user input,
+      // just a message to the programmer
       scanner.nextLine(); // consume the invalid input
       return -1; // return -1 to indicate invalid input
     }
@@ -63,12 +64,12 @@ public class Input {
 
   public int getIntForBoardDimension(String dimensionName, int min, int max) {
     while (true) {
-      String prompt = "Enter the number of " + dimensionName + " for the board (" + min + "-" + max + "): ";
+      String prompt = "\nEnter the number of " + dimensionName + " for the board (" + min + "-" + max + "): ";
       int dimension = getIntInput(prompt);
       if (dimension != -1 && dimension >= min && dimension <= max) {
         return dimension;
       } else {
-        System.out.println("Invalid input. Board " + dimensionName + " must be between " + min + " and " + max + ".");
+        System.out.println("\nInvalid input. Board " + dimensionName + " must be between " + min + " and " + max + ".");
       }
     }
   }

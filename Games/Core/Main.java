@@ -1,9 +1,10 @@
+package Games.Core;
 
 /* This is the main entry point for the game application */
 import java.util.Map;
 
-import IO.Input;
-import SlidingPuzzle.SlidingPuzzleGame;
+import Games.IO.Input;
+import Games.SlidingPuzzle.SlidingPuzzleGame;
 
 public class Main {
   public static void main(String[] args) {
@@ -18,12 +19,13 @@ public class Main {
 
     if (gameSelection.equalsIgnoreCase("s")) {
       Game game = new SlidingPuzzleGame(playerNameInput, input);
+      game.setupAndPlayMultipleGames(); // TODO: move outside of else if block when more games are implemented
     } else if (gameSelection.equalsIgnoreCase("d")) {
       System.out.println("Sorry, dots and boxes is not implemented yet. Please try again later.");
     }
     // input validation already implemented in Input so else not needed here
-    Game game = new Game(playerNameInput, input);
-    game.setupAndPlayMultipleGames();
+    // game.setupAndPlayMultipleGames(); // TODO: uncomment when more games are
+    // implemented
 
     input.close();
   }

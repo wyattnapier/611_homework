@@ -1,3 +1,5 @@
+package Games.Core;
+
 public class Tile {
     private int value; // value of the tile
     private int x, y; // position of the tile

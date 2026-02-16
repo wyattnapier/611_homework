@@ -1,15 +1,15 @@
-import IO.Input;
+package Games.Core;
+
+import Games.IO.Input;
 
 /**
  * used to control the game flow
  */
-public class Game {
+public abstract class Game {
 
   private Player player;
   private Board board;
   private Input input;
-  private final int MIN_DIMENSION = 2;
-  private final int MAX_DIMENSION = 9; // reasonable upper limit to avoid huge boards
 
   /**
    * constructor for Game
@@ -30,7 +30,7 @@ public class Game {
   public void playSingleGame(int rows, int cols) {
     // ensure that game isn't already solved when board is created
     do {
-      board = new Board(rows, cols);
+      board = createBoard(rows, cols);
     } while (board.isSolved());
     System.out.println(board);
 
@@ -54,30 +54,21 @@ public class Game {
   }
 
   /**
+   * creates and returns a new board for the appropriate game type with the
+   * specified dimensions
+   * 
+   * @param rows number of rows for the board
+   * @param cols number of columns for the board
+   * @return a new Board object with the specified dimensions
+   */
+  public abstract Board createBoard(int rows, int cols);
+
+  /**
    * plays a single move of sliding puzzle
    * 
    * @return 1 to continue playing, 0 to indicate a win, -1 to quit
    */
-  public int playSingleMove() {
-    String selectedTileValue = input.getStringInput("Enter the tile number to move: ");
-    System.out.println();
-    if (selectedTileValue.equalsIgnoreCase("q")) {
-      return -1;
-    }
-    if (selectedTileValue.equalsIgnoreCase("w")) {
-      board.setBoardToSolvedState();
-      System.out.println(board);
-      return 0;
-    }
-    if (board.swapTile(selectedTileValue)) {
-      player.incrementMoves();
-      System.out.println(board);
-      return board.isSolved() ? 0 : 1;
-    } else {
-      System.out.print("Invalid move. ");
-      return 1;
-    }
-  }
+  public abstract int playSingleMove();
 
   /**
    * sets up and plays multiple games, asking user if they want to play again
@@ -102,17 +93,38 @@ public class Game {
   }
 
   /**
+   * Get the current board
+   * 
+   * @return the Board object
+   */
+  public Board getBoard() {
+    return board;
+  }
+
+  /**
+   * Get the current player
+   * 
+   * @return the Player object
+   */
+  public Player getPlayer() {
+    return player;
+  }
+
+  /**
    * Prompts the user for a valid board dimension (rows or columns)
    * 
    * @param dimensionName the name of the dimension ("rows" or "columns")
    * @return a valid board dimension (MIN_DIMENSION <= dimension <= MAX_DIMENSION)
    */
-  private int getValidBoardDimension(String dimensionName) {
-    while (true) {
-      String prompt = "Enter the number of " + dimensionName + " for the board (" + MIN_DIMENSION + "-" + MAX_DIMENSION
-          + "): ";
-      int dimension = input.getIntForBoardDimension(prompt, MIN_DIMENSION, MAX_DIMENSION);
-      return dimension;
-    }
-  }
+  public abstract int getValidBoardDimension(String dimensionName);
+
+  /*
+   * Get the minimum board dimension allowed for this game
+   */
+  public abstract int getMIN_DIMENSION();
+
+  /*
+   * Get the maximum board dimension allowed for this game
+   */
+  public abstract int getMAX_DIMENSION();
 }

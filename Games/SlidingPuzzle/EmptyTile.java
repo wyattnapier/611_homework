@@ -1,3 +1,7 @@
+package Games.SlidingPuzzle;
+
+import Games.Core.Tile;
+
 public class EmptyTile extends Tile {
 
   /**
