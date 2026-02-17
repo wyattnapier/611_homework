@@ -1,7 +1,5 @@
 package Games.Core;
 
-import Games.IO.Input;
-
 /**
  * Abstract class representing a generic board game. Contains common
  * functionality used to control the game flow

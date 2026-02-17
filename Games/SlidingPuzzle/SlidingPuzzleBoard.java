@@ -1,9 +1,7 @@
 package Games.SlidingPuzzle;
 
 import java.util.*;
-
 import Games.Core.Board;
-import Games.SlidingPuzzle.SlidingPuzzleTile;
 
 public class SlidingPuzzleBoard extends Board {
 

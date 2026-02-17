@@ -2,7 +2,6 @@ package Games.Core;
 
 public abstract class Board {
     protected int m, n; // dimensions of the board
-    // TODO: consider adjusting tiles type to be more specific to the game type?
     protected static final int[][] ADJACENT_OFFSETS = {
             { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } }; // up, right, down, left
 

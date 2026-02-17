@@ -1,7 +1,5 @@
 package Games.SlidingPuzzle;
 
-import Games.SlidingPuzzle.SlidingPuzzleTile;
-
 public class SlidingPuzzleEmptyTile extends SlidingPuzzleTile {
 
   /**
