@@ -1,8 +1,8 @@
 package Games.SlidingPuzzle;
 
-import Games.Core.Tile;
+import Games.SlidingPuzzle.SlidingPuzzleTile;
 
-public class EmptyTile extends Tile {
+public class SlidingPuzzleEmptyTile extends SlidingPuzzleTile {
 
   /**
    * Constructor for EmptyTile
@@ -15,7 +15,7 @@ public class EmptyTile extends Tile {
    * @param dest_y_pos destination y position of the tile when game is solved
    *                   (bottom right corner)
    */
-  public EmptyTile(int val, int x_pos, int y_pos, int dest_x_pos, int dest_y_pos) {
+  public SlidingPuzzleEmptyTile(int val, int x_pos, int y_pos, int dest_x_pos, int dest_y_pos) {
     super(val, x_pos, y_pos, dest_x_pos, dest_y_pos);
   }
 

@@ -3,11 +3,12 @@ package Games.SlidingPuzzle;
 import java.util.*;
 
 import Games.Core.Board;
-import Games.Core.Tile;
+import Games.SlidingPuzzle.SlidingPuzzleTile;
 
 public class SlidingPuzzleBoard extends Board {
 
   private int emptyTileX, emptyTileY; // coordinates of empty tile
+  private SlidingPuzzleTile[][] tiles;
 
   /**
    * Constructor for Board
@@ -17,12 +18,12 @@ public class SlidingPuzzleBoard extends Board {
    */
   public SlidingPuzzleBoard(int rows, int cols) {
     super(rows, cols);
+    // error handling for invalid board dimensions already done in Game when
+    // prompting user for dimensions, but adding here for extra safety
     if (rows < 1 || cols < 1 || rows > 9 || cols > 9) {
       throw new IllegalArgumentException("Board dimensions must be 1 <= rows, cols <= 9");
     }
-    m = rows;
-    n = cols;
-    tiles = new Tile[m][n];
+    tiles = new SlidingPuzzleTile[rows][cols];
 
     setBoardToSolvedState();
     shuffleBoardWithRandomMoves();
@@ -70,13 +71,13 @@ public class SlidingPuzzleBoard extends Board {
    * Only used internally during shuffling
    */
   private void performShufflingTileSwap(int x1, int y1, int x2, int y2) {
-    Tile temp = tiles[x1][y1];
+    SlidingPuzzleTile temp = tiles[x1][y1];
     tiles[x1][y1] = tiles[x2][y2];
     tiles[x2][y2] = temp;
 
     // Update positions of the tiles
-    tiles[x1][y1].updatePosition(x1, y1);
-    tiles[x2][y2].updatePosition(x2, y2);
+    tiles[x1][y1].updateTilePosition(x1, y1);
+    tiles[x2][y2].updateTilePosition(x2, y2);
 
     // Update empty tile position
     setEmptyTileCoordinates(x2, y2);
@@ -110,7 +111,7 @@ public class SlidingPuzzleBoard extends Board {
   public boolean isSolved() {
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < n; j++) {
-        if (!tiles[i][j].isCorrectPosition()) {
+        if (!tiles[i][j].isComplete()) {
           return false;
         }
       }
@@ -160,10 +161,10 @@ public class SlidingPuzzleBoard extends Board {
     int adjacentX = emptyTileX + ADJACENT_OFFSETS[offsetIndex][0];
     int adjacentY = emptyTileY + ADJACENT_OFFSETS[offsetIndex][1];
 
-    Tile selectedTile = tiles[adjacentX][adjacentY];
+    SlidingPuzzleTile selectedTile = tiles[adjacentX][adjacentY];
     tiles[emptyTileX][emptyTileY] = selectedTile;
-    selectedTile.updatePosition(emptyTileX, emptyTileY);
-    tiles[adjacentX][adjacentY] = new EmptyTile(m * n, adjacentX, adjacentY, m - 1, n - 1);
+    selectedTile.updateTilePosition(emptyTileX, emptyTileY);
+    tiles[adjacentX][adjacentY] = new SlidingPuzzleEmptyTile(m * n, adjacentX, adjacentY, m - 1, n - 1);
     setEmptyTileCoordinates(adjacentX, adjacentY);
     return true;
   }
@@ -181,7 +182,7 @@ public class SlidingPuzzleBoard extends Board {
       int searchX = emptyTileX + offset[0];
       int searchY = emptyTileY + offset[1];
       if (isWithinBounds(searchX, searchY)) {
-        Tile adjacentTile = tiles[searchX][searchY];
+        SlidingPuzzleTile adjacentTile = tiles[searchX][searchY];
         if (adjacentTile.toString().equals(selectedTileValue)) {
           return i;
         }
@@ -200,10 +201,10 @@ public class SlidingPuzzleBoard extends Board {
         int dest_x = calculateTileEndX(tileValue);
         int dest_y = calculateTileEndY(tileValue);
         if (tileValue == m * n) {
-          tiles[i][j] = new EmptyTile(tileValue, i, j, dest_x, dest_y);
+          tiles[i][j] = new SlidingPuzzleEmptyTile(tileValue, i, j, dest_x, dest_y);
           setEmptyTileCoordinates(i, j);
         } else {
-          tiles[i][j] = new Tile(tileValue, i, j, dest_x, dest_y);
+          tiles[i][j] = new SlidingPuzzleTile(tileValue, i, j, dest_x, dest_y);
         }
         tileValue++;
       }

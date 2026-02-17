@@ -3,7 +3,6 @@ package Games.Core;
 public abstract class Board {
     protected int m, n; // dimensions of the board
     // TODO: consider adjusting tiles type to be more specific to the game type?
-    protected Tile[][] tiles; // 2D array of tiles which is the board itself
     protected static final int[][] ADJACENT_OFFSETS = {
             { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } }; // up, right, down, left
 
@@ -18,8 +17,6 @@ public abstract class Board {
         // prompting user for dimensions
         m = rows;
         n = cols;
-        tiles = new Tile[m][n]; // TODO: initialize board with specific tile type based on board type (e.g.
-                                // SlidingPuzzleBoard should initialize with SlidingPuzzleTiles)
     }
 
     /**
