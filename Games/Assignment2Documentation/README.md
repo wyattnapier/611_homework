@@ -26,6 +26,8 @@
 
 https://www.geeksforgeeks.org/java/stringbuilder-class-in-java-with-examples/
 
+https://www.geeksforgeeks.org/java/interfaces-in-java/
+
 ### I/O example
 
 ### Design documentation
