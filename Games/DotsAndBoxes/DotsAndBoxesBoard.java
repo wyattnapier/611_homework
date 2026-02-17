@@ -8,10 +8,11 @@ public class DotsAndBoxesBoard extends Board {
 
   public DotsAndBoxesBoard(int rows, int cols) {
     super(rows, cols);
-    m = rows;
-    n = cols;
-    tiles = new Tile[m][n]; // TODO: initialize board with specific tile type based on board type (e.g.
-                            // SlidingPuzzleBoard should initialize with SlidingPuzzleTiles)
+    board_rows = rows;
+    board_cols = cols;
+    tiles = new Tile[board_rows][board_cols]; // TODO: initialize board with specific tile type based on board type
+                                              // (e.g.
+    // SlidingPuzzleBoard should initialize with SlidingPuzzleTiles)
   }
 
   public boolean isSolved() {

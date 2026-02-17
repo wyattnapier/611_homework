@@ -1,7 +1,8 @@
 package Games.Core;
 
 public abstract class Board {
-    protected int m, n; // dimensions of the board
+    // board_rows is m and board_cols is n
+    protected int board_rows, board_cols; // dimensions of the board
     protected static final int[][] ADJACENT_OFFSETS = {
             { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } }; // up, right, down, left
 
@@ -14,8 +15,8 @@ public abstract class Board {
     public Board(int rows, int cols) {
         // error handling for invalid board dimensions already done in Game when
         // prompting user for dimensions
-        m = rows;
-        n = cols;
+        board_rows = rows;
+        board_cols = cols;
     }
 
     /**
@@ -33,7 +34,7 @@ public abstract class Board {
      * @return true if within bounds, false otherwise
      */
     public boolean isWithinBounds(int x, int y) {
-        return (x >= 0 && x < this.m && y >= 0 && y < this.n);
+        return (x >= 0 && x < this.board_rows && y >= 0 && y < this.board_cols);
     }
 
     /**

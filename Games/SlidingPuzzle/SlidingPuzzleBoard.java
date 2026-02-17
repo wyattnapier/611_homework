@@ -88,7 +88,7 @@ public class SlidingPuzzleBoard extends Board {
    * @return target x position
    */
   private int calculateTileEndX(int tileValue) {
-    return (tileValue - 1) / n;
+    return (tileValue - 1) / board_cols;
   }
 
   /**
@@ -98,7 +98,7 @@ public class SlidingPuzzleBoard extends Board {
    * @return target y position
    */
   private int calculateTileEndY(int tileValue) {
-    return (tileValue - 1) % n;
+    return (tileValue - 1) % board_cols;
   }
 
   /**
@@ -107,25 +107,14 @@ public class SlidingPuzzleBoard extends Board {
    * @return true if the board is solved, false otherwise
    */
   public boolean isSolved() {
-    for (int i = 0; i < m; i++) {
-      for (int j = 0; j < n; j++) {
+    for (int i = 0; i < board_rows; i++) {
+      for (int j = 0; j < board_cols; j++) {
         if (!tiles[i][j].isComplete()) {
           return false;
         }
       }
     }
     return true;
-  }
-
-  /**
-   * Check if given coordinates are within board bounds
-   * 
-   * @param x the x index
-   * @param y the y index
-   * @return true if within bounds, false otherwise
-   */
-  public boolean isWithinBounds(int x, int y) {
-    return (x >= 0 && x < this.m && y >= 0 && y < this.n);
   }
 
   /**
@@ -162,7 +151,8 @@ public class SlidingPuzzleBoard extends Board {
     SlidingPuzzleTile selectedTile = tiles[adjacentX][adjacentY];
     tiles[emptyTileX][emptyTileY] = selectedTile;
     selectedTile.updateTilePosition(emptyTileX, emptyTileY);
-    tiles[adjacentX][adjacentY] = new SlidingPuzzleEmptyTile(m * n, adjacentX, adjacentY, m - 1, n - 1);
+    tiles[adjacentX][adjacentY] = new SlidingPuzzleEmptyTile(board_rows * board_cols, adjacentX, adjacentY,
+        board_rows - 1, board_cols - 1);
     setEmptyTileCoordinates(adjacentX, adjacentY);
     return true;
   }
@@ -194,11 +184,11 @@ public class SlidingPuzzleBoard extends Board {
    */
   public void setBoardToSolvedState() {
     int tileValue = 1;
-    for (int i = 0; i < m; i++) {
-      for (int j = 0; j < n; j++) {
+    for (int i = 0; i < board_rows; i++) {
+      for (int j = 0; j < board_cols; j++) {
         int dest_x = calculateTileEndX(tileValue);
         int dest_y = calculateTileEndY(tileValue);
-        if (tileValue == m * n) {
+        if (tileValue == board_rows * board_cols) {
           tiles[i][j] = new SlidingPuzzleEmptyTile(tileValue, i, j, dest_x, dest_y);
           setEmptyTileCoordinates(i, j);
         } else {
@@ -211,18 +201,18 @@ public class SlidingPuzzleBoard extends Board {
 
   @Override
   public String toString() {
-    String spacerChunk = (m * n > 10) ? "+----" : "+---";
+    String spacerChunk = (board_rows * board_cols > 10) ? "+----" : "+---";
     String s = "";
     String horizontalSpacer = "";
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < board_cols; i++) {
       horizontalSpacer += spacerChunk;
     }
     horizontalSpacer += "+\n";
-    for (int i = 0; i < m; i++) {
+    for (int i = 0; i < board_rows; i++) {
       s += horizontalSpacer;
-      for (int j = 0; j < n; j++) {
+      for (int j = 0; j < board_cols; j++) {
         String tileValue = tiles[i][j].toString();
-        if (m * n > 10 && tileValue.length() == 1) {
+        if (board_rows * board_cols > 10 && tileValue.length() == 1) {
           tileValue = " " + tileValue; // add extra space for alignment
         }
         s += "| " + tileValue + " ";
