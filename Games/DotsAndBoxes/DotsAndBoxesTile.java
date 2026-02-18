@@ -3,20 +3,48 @@ package Games.DotsAndBoxes;
 import Games.Core.Tile;
 
 public class DotsAndBoxesTile implements Tile {
-  private int owner; // TODO: make this an enum so it is 0 is nobody, 1 is player 1 or 2 is player 2
+  private DotsAndBoxesOwnership owner; // TODO: make this an enum so it is 0 is nobody, 1 is player 1 or 2 is player 2
+  private int[] vertices; // list of corners in square starting top left and going clockwise
+  private DotsAndBoxesEdge[] edges; // order edge list as up, right, left, right
+  private int[] verticesOffsets = { 0, 10, 11, 1 }; // could just use single numbers if we set the max number of rows
+                                                    // and cols to 9x9
 
-  public DotsAndBoxesTile() {
-    owner = 0;
+  /**
+   * @param topLeftCornerValue is the location of the top left corner vertex
+   * @param edges              is a list of the references to the edges for the
+   *                           tile
+   */
+  public DotsAndBoxesTile(int topLeftCornerValue, DotsAndBoxesEdge[] edges) {
+    owner = DotsAndBoxesOwnership.NOBODY;
+    vertices = new int[verticesOffsets.length];
+    this.edges = edges;
+    for (int i = 0; i < verticesOffsets.length; i++) {
+      vertices[i] = topLeftCornerValue + verticesOffsets[i];
+    }
   }
 
   public boolean isComplete() {
-    return false; // TODO: implement
+    return owner != DotsAndBoxesOwnership.NOBODY;
   }
 
+  // set a box to be complete if all edges in it are complete after marking an edge
+  // public void setIsComplete() {
+    
+  // }
+
+  // TODO: mark an edge complete which will then also set ownership
+
+  // TODO: is it possible to change colors?
+  // TODO: better labeling?
   public String toString() {
-    return owner == 0 ? "" : Integer.toString(owner); // either player who owns it or nothing
-    // TODO: probably add player name or something?
-    // TODO: add color if possible!
+    switch (owner) {
+      case PLAYER1:
+        return "1";
+      case PLAYER2:
+        return "2";
+      default:
+        return "";
+    }
   }
 }
 
