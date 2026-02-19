@@ -3,11 +3,10 @@ package Games.DotsAndBoxes;
 import Games.Core.Tile;
 
 public class DotsAndBoxesTile implements Tile {
-  private DotsAndBoxesOwnership owner; // TODO: make this an enum so it is 0 is nobody, 1 is player 1 or 2 is player 2
+  private DotsAndBoxesOwnership owner;
   private int[] vertices; // list of corners in square starting top left and going clockwise
   private DotsAndBoxesEdge[] edges; // order edge list as up, right, left, right
-  private int[] verticesOffsets = { 0, 10, 11, 1 }; // could just use single numbers if we set the max number of rows
-                                                    // and cols to 9x9
+  private int[] verticesOffsets = { 0, 10, 11, 1 }; // can use single numbers since max board is 9x9
 
   /**
    * @param topLeftCornerValue is the location of the top left corner vertex
@@ -23,17 +22,30 @@ public class DotsAndBoxesTile implements Tile {
     }
   }
 
+  /**
+   * @return true if square is complete (has all 4 edges drawn)
+   */
   public boolean isComplete() {
     return owner != DotsAndBoxesOwnership.NOBODY;
   }
 
-  // set a box to be complete if all edges in it are complete after marking an
-  // edge
-  // public void setIsComplete() {
-
-  // }
-
-  // TODO: mark an edge complete which will then also set ownership
+  /**
+   * set a box to be complete if all edges in it are complete after marking an
+   * edge
+   * 
+   * @param playerThatAddedLastEdge enum value for the player that most recently
+   *                                marked an edge (player1 or player2)
+   */
+  public void setIsComplete(DotsAndBoxesOwnership playerThatAddedLastEdge) {
+    if (isComplete())
+      return; // don't change ownership
+    for (DotsAndBoxesEdge edge : edges) {
+      if (!edge.edgeHasOwner()) {
+        return; // owner is still nobody, no need to change
+      }
+    }
+    owner = playerThatAddedLastEdge;
+  }
 
   // TODO: is it possible to change colors?
   // TODO: better labeling?

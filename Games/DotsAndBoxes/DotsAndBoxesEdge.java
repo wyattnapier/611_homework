@@ -11,10 +11,10 @@ public class DotsAndBoxesEdge {
   }
 
   /**
-   * @param status represents edge owner or 0 if neither
+   * @param owner person who drew the edge
    */
-  public void setEdgeOwner(DotsAndBoxesOwnership status) {
-    edgeOwner = status;
+  public void setEdgeOwner(DotsAndBoxesOwnership owner) {
+    edgeOwner = owner;
   }
 
   /**
@@ -25,7 +25,7 @@ public class DotsAndBoxesEdge {
     return edgeOwner;
   }
 
-  public Boolean isEdgeDrawn() {
+  public Boolean edgeHasOwner() {
     return edgeOwner != DotsAndBoxesOwnership.NOBODY;
   }
 

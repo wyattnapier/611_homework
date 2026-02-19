@@ -2,6 +2,7 @@ package Games.SlidingPuzzle;
 
 import Games.Core.Player;
 import Games.Core.Game;
+import Games.Core.MoveOutcome;
 import Games.IO.Input;
 
 /**
@@ -9,7 +10,7 @@ import Games.IO.Input;
  * class and implements the specific logic for playing a sliding puzzle game. It
  * handles user
  */
-public class SlidingPuzzleGame implements Game {
+public class SlidingPuzzleGame extends Game {
   private Player player;
   private SlidingPuzzleBoard board;
   private Input input;
@@ -28,26 +29,6 @@ public class SlidingPuzzleGame implements Game {
   }
 
   /**
-   * sets up and plays multiple games, asking user if they want to play again
-   * after each game
-   */
-  public void setupAndPlayMultipleGames() {
-    int rows = getValidBoardDimension("rows");
-    int cols = getValidBoardDimension("columns");
-    System.out.println();
-    // control flow for playing multiple games
-    String playAgainInput;
-    do {
-      playSingleGame(rows, cols);
-      playAgainInput = input.getPlayAgainInputString();
-      if (playAgainInput.equalsIgnoreCase("n")) {
-        System.out.println("Thanks for playing!");
-        break;
-      }
-    } while (playAgainInput.equalsIgnoreCase("y"));
-  }
-
-  /**
    * plays a single game of sliding puzzle
    * 
    * @param rows number of rows for the board
@@ -62,19 +43,18 @@ public class SlidingPuzzleGame implements Game {
 
     player.resetNumberOfMoves();
 
-    int continuePlaying = 1; // 1 to continue, 0 to win, -1 to quit
-    while (continuePlaying == 1) {
-      continuePlaying = playSingleMove();
+    MoveOutcome continuePlayingFlag = MoveOutcome.CONTINUE_PLAYING; // 1 to continue, 0 to win, -1 to quit
+    while (continuePlayingFlag == MoveOutcome.CONTINUE_PLAYING) {
+      continuePlayingFlag = playSingleMove();
     }
 
     // game end message
-    if (continuePlaying == 0) {
+    if (continuePlayingFlag == MoveOutcome.WIN) {
       player.incrementGamesWon();
       System.out.println("Congratulations! You've won the game!");
       System.out.println("It only took you " + player.getNumberOfMoves() + " moves to win your last game!");
       System.out.println("You've won " + player.getNumberOfGamesWon() + " games!\n");
-
-    } else if (continuePlaying == -1) {
+    } else if (continuePlayingFlag == MoveOutcome.QUIT) {
       System.out.println("You won " + player.getNumberOfGamesWon() + " games!");
     }
   }
@@ -82,48 +62,35 @@ public class SlidingPuzzleGame implements Game {
   /**
    * plays a single move of sliding puzzle
    * 
-   * @return 1 to continue playing, 0 to indicate a win, -1 to quit
+   * @return outcome of the move with relation to game loop
    */
-  public int playSingleMove() {
+  public MoveOutcome playSingleMove() {
     String selectedTileValue = input.getStringInput("Enter the tile number to move or 'q' to quit: ");
     System.out.println();
 
     if (selectedTileValue.equalsIgnoreCase("q")) {
-      return -1;
+      return MoveOutcome.QUIT;
     }
     if (selectedTileValue.equalsIgnoreCase("w")) {
       board.setBoardToSolvedState();
       System.out.println(board);
-      return 0;
+      return MoveOutcome.WIN;
     }
     if (board.swapTile(selectedTileValue)) {
-      Player player = getPlayer();
       player.incrementMoves();
       System.out.println(board);
-      return board.isSolved() ? 0 : 1;
+      return board.isSolved() ? MoveOutcome.WIN : MoveOutcome.CONTINUE_PLAYING;
     } else {
       System.out.print("Invalid move. ");
-      return 1;
+      return MoveOutcome.CONTINUE_PLAYING;
     }
   }
 
-  /**
-   * Get the current player
-   * 
-   * @return the Player object
-   */
-  public Player getPlayer() {
-    return player;
+  public int getMinDimension() {
+    return MIN_DIMENSION;
   }
 
-  /**
-   * Prompts the user for a valid board dimension (rows or columns)
-   *
-   * @param dimensionName the name of the dimension ("rows" or "columns")
-   * @return a valid board dimension (MIN_DIMENSION <= dimension <=
-   *         MAX_DIMENSION)
-   */
-  public int getValidBoardDimension(String dimensionName) {
-    return input.getIntForBoardDimension(dimensionName, MIN_DIMENSION, MAX_DIMENSION);
+  public int getMaxDimension() {
+    return MAX_DIMENSION;
   }
 }

@@ -3,6 +3,9 @@ package Games.IO;
 import java.util.Map;
 import java.util.Scanner;
 
+import Games.Core.Endpoints;
+import Games.DotsAndBoxes.DotsAndBoxesEdge;
+
 public class Input {
   private Scanner scanner;
 
@@ -93,6 +96,24 @@ public class Input {
       if (currentPlayerInt == 1 || currentPlayerInt == 2)
         return currentPlayerInt;
       System.out.println("Invalid input. Must enter either 1 or 2.");
+    }
+  }
+
+  public Endpoints getEndpointsForNewLine() {
+    String prompt = "\nSelect the points that you would like to draw a line between." +
+        " Enter them in the following format: r1 c1 r2 c2.\nInput the points here (space separated): ";
+    while (true) {
+      try {
+        System.out.println(prompt);
+        int r1 = scanner.nextInt();
+        int c1 = scanner.nextInt();
+        int r2 = scanner.nextInt();
+        int c2 = scanner.nextInt();
+        scanner.nextLine(); // consumes the newline
+        return new Endpoints(r1 * 10 + c1, r2 * 10 + c2);
+      } catch (Exception e) {
+        return new Endpoints(-1, -1); // will trigger an error and cause prompting for new input
+      }
     }
   }
 

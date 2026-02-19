@@ -50,10 +50,10 @@ public class Driver {
             player2 = new Player(player2NameInput);
           }
           game = new DotsAndBoxesGame(player1, player2, input);
-          continuePlaying = false;
           break;
         case "q":
           output.printFinalEndMessage();
+          continuePlaying = false;
           break;
         default:
           System.out.println("This game hasn't been implemented yet. Please try again later.");
@@ -63,7 +63,7 @@ public class Driver {
         game.setupAndPlayMultipleGames();
       // add option to quit after playing first game
       if (firstRun) {
-        gameOptions.put("q", "quitting all games");
+        gameOptions.put("q", "quitting all games"); // TODO: reorder so this is last
         firstRun = false;
       }
     } while (continuePlaying);

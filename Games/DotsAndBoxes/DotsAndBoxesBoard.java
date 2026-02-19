@@ -3,6 +3,7 @@ package Games.DotsAndBoxes;
 import java.util.*;
 import Games.Core.Board;
 import Games.Core.Endpoints;
+import Games.Core.Player;
 
 public class DotsAndBoxesBoard extends Board {
   private Map<Endpoints, DotsAndBoxesEdge> endpointsToEdge = new HashMap<>(); // maps endpoints to actual edge objects
@@ -75,6 +76,25 @@ public class DotsAndBoxesBoard extends Board {
     return (0 <= r && r <= board_rows) && (0 <= c && c <= board_cols);
   }
 
+  /**
+   * 
+   * @param points
+   * @param currentPlayer
+   * @return true if successfully marks and false otherwise
+   */
+  public boolean markEdge(Endpoints points, DotsAndBoxesOwnership currentPlayer) {
+    if (!isValidEdge(points))
+      return false; // invalid edge
+    DotsAndBoxesEdge currentEdge = endpointsToEdge.get(points);
+    if (currentEdge.edgeHasOwner())
+      return false; // edge has already been claimed
+    // update edge and tile ownership
+    currentEdge.setEdgeOwner(currentPlayer);
+    DotsAndBoxesTile currentTile = edgeToTiles.get(currentEdge);
+    currentTile.setIsComplete(currentPlayer);
+    return true;
+  }
+
   public boolean isSolved() {
     for (int i = 0; i < board_rows; i++) {
       for (int j = 0; j < board_cols; j++) {
@@ -83,7 +103,7 @@ public class DotsAndBoxesBoard extends Board {
         }
       }
     }
-    return true; // TODO: implement when Dots and Boxes is implemented
+    return true;
   }
 
   public void setBoardToSolvedState() {
@@ -117,7 +137,7 @@ public class DotsAndBoxesBoard extends Board {
           Endpoints e = new Endpoints(p1, p2);
           DotsAndBoxesEdge edge = endpointsToEdge.get(e);
 
-          if (edge != null && edge.isEdgeDrawn()) {
+          if (edge != null && edge.edgeHasOwner()) {
             sb.append("──");
           } else {
             sb.append("  ");
@@ -134,7 +154,7 @@ public class DotsAndBoxesBoard extends Board {
           int p2 = p1 + 10;
           Endpoints e = new Endpoints(p1, p2);
           DotsAndBoxesEdge edge = endpointsToEdge.get(e);
-          if (edge != null && edge.isEdgeDrawn()) {
+          if (edge != null && edge.edgeHasOwner()) {
             sb.append("│  ");
           } else {
             sb.append("   ");
