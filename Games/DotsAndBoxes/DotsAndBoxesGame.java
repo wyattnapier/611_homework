@@ -5,26 +5,32 @@ import Games.Core.*;
 
 public class DotsAndBoxesGame implements Game {
   private Input input;
+  private int MIN_DIMENSION = 1;
+  private int MAX_DIMENSION = 9;
+  private Player player1, player2;
 
-  public DotsAndBoxesGame(String playerName, Games.IO.Input input) {
+  public DotsAndBoxesGame(String player1, String player2, Games.IO.Input input) {
+    this.player1 = new Player(player1);
+    this.player2 = new Player(player2);
     this.input = input;
   }
 
   public void setupAndPlayMultipleGames() {
+    int rows = input.getIntForBoardDimension("rows", MIN_DIMENSION, MAX_DIMENSION);
+    int cols = input.getIntForBoardDimension("columns", MIN_DIMENSION, MAX_DIMENSION);
+    playMultipleGames(rows, cols);
     return; // TODO: implement when Dots and Boxes is implemented
   }
 
   public void playMultipleGames(int rows, int cols) {
+    playSingleGame(rows, cols);
     return; // TODO: implement when Dots and Boxes is implemented
   }
 
   public void playSingleGame(int rows, int cols) {
-    DotsAndBoxesBoard board = createBoard(rows, cols);
+    DotsAndBoxesBoard board = new DotsAndBoxesBoard(rows, cols);
+    System.out.println(board);
     // TODO: implement game loop
-  }
-
-  public DotsAndBoxesBoard createBoard(int rows, int cols) {
-    return null; // TODO: implement when Dots and Boxes is implemented
   }
 
   public int playSingleMove() {

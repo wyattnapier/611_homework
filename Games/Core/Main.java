@@ -5,6 +5,7 @@ import java.util.Map;
 
 import Games.IO.Input;
 import Games.SlidingPuzzle.SlidingPuzzleGame;
+import Games.DotsAndBoxes.DotsAndBoxesGame;
 
 public class Main {
   public static void main(String[] args) {
@@ -22,18 +23,20 @@ public class Main {
     // on return value of the setupAndPlayMultipleGames function
     // TODO: add an enum that is used for each game's return value (create a new
     // folder for enums)
-    Game game;
+    Game game = null;
     if (gameSelection.equalsIgnoreCase("s")) {
       game = new SlidingPuzzleGame(player1NameInput, input);
-      game.setupAndPlayMultipleGames(); // TODO: move outside of else if block when more games are implemented
     } else if (gameSelection.equalsIgnoreCase("d")) {
       // TODO: add a second player here if not already created and pas that into the
       // game
-      String player2NameInput = input.getStringInput("\n What is player 2's name?");
-      System.out.println("Sorry, dots and boxes is not implemented yet. Please try again later.");
-      // game = new DotsAndBoxesGame(player1, player2, input); // TODO: uncomment when
-      // dots and boxes is implemented
+      String player2NameInput = input.getStringInput("\nWhat is player 2's name? ");
+      game = new DotsAndBoxesGame(player1NameInput, player2NameInput, input);
+    } else {
+      System.out.println("TRY AGAIN");
+      // TODO: add a loop to force them to try again (maybe in input method)
     }
+    if (game != null)
+      game.setupAndPlayMultipleGames();
     // input validation already implemented in Input so else not needed here
     // game.setupAndPlayMultipleGames(); // TODO: uncomment when more games are
     // implemented

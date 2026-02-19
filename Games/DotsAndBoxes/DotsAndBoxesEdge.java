@@ -4,7 +4,7 @@ import Games.Core.Endpoints;
 
 public class DotsAndBoxesEdge {
   private Endpoints edgeEndpoints; // two endpoint of a line
-  private DotsAndBoxesOwnership edgeOwner;
+  private DotsAndBoxesOwnership edgeOwner = DotsAndBoxesOwnership.NOBODY;
 
   public DotsAndBoxesEdge(Endpoints ends) {
     edgeEndpoints = ends;
@@ -23,6 +23,10 @@ public class DotsAndBoxesEdge {
    */
   public DotsAndBoxesOwnership getEdgeOwner() {
     return edgeOwner;
+  }
+
+  public Boolean isEdgeDrawn() {
+    return edgeOwner != DotsAndBoxesOwnership.NOBODY;
   }
 
   public Endpoints getEdgeEndpoints() {

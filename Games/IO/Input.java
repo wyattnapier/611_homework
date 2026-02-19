@@ -62,6 +62,7 @@ public class Input {
     }
   }
 
+  // TODO: would be good to use an enum for dimensionName probably
   public int getIntForBoardDimension(String dimensionName, int min, int max) {
     while (true) {
       String prompt = "\nEnter the number of " + dimensionName + " for the board (" + min + "-" + max + "): ";

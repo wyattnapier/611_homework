@@ -27,9 +27,10 @@ public class DotsAndBoxesTile implements Tile {
     return owner != DotsAndBoxesOwnership.NOBODY;
   }
 
-  // set a box to be complete if all edges in it are complete after marking an edge
+  // set a box to be complete if all edges in it are complete after marking an
+  // edge
   // public void setIsComplete() {
-    
+
   // }
 
   // TODO: mark an edge complete which will then also set ownership

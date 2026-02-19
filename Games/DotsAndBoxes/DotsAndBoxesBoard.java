@@ -3,23 +3,23 @@ package Games.DotsAndBoxes;
 import java.util.*;
 import Games.Core.Board;
 import Games.Core.Endpoints;
-import Games.Core.Tile;
 
 public class DotsAndBoxesBoard extends Board {
-  private Map<Endpoints, DotsAndBoxesEdge> endpointsToEdge; // maps endpoints to actual edge objects
-  private Map<DotsAndBoxesEdge, List<DotsAndBoxesTile>> edgeToTiles; // maps edges to the tiles that they're a part of
+  private Map<Endpoints, DotsAndBoxesEdge> endpointsToEdge = new HashMap<>(); // maps endpoints to actual edge objects
+  private Map<DotsAndBoxesEdge, DotsAndBoxesTile> edgeToTiles = new HashMap<>(); // maps edges to the tiles that they're
+                                                                                 // a part of
   private int[] verticesOffsets = { 0, 10, 11, 1 }; // could just use single numbers if we set the max number of rows
                                                     // and cols to 9x9
-  private Tile[][] tiles;
+  private DotsAndBoxesTile[][] tiles;
 
   public DotsAndBoxesBoard(int rows, int cols) {
     super(rows, cols);
     int[] edgeOffsets = { 1, 10 };
-    // TODO: populate the map of ednpionts to edges
+    // populate the map of endpoints to edges
     for (int r = 0; r <= rows; r++) {
-      for (int j = 0; j <= cols; j++) {
+      for (int c = 0; c <= cols; c++) {
         for (int offset : edgeOffsets) {
-          int p1 = r * 10 + j;
+          int p1 = r * 10 + c;
           int p2 = p1 + offset;
           Endpoints pointPair = new Endpoints(p1, p2);
           if (isValidEdge(pointPair)) {
@@ -29,8 +29,27 @@ public class DotsAndBoxesBoard extends Board {
         }
       }
     }
-    // TODO: iterate through all top left corners and create tiles to populate map
+    // loop through all top left corners of boxes and create tiles to populate map
     // of edge to tile and the tile array
+    tiles = new DotsAndBoxesTile[board_rows][board_cols];
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        int topLeftVertex = r * 10 + c;
+        DotsAndBoxesEdge[] tileEdges = new DotsAndBoxesEdge[4];
+        for (int offsetIndex = 0; offsetIndex < verticesOffsets.length; offsetIndex++) {
+          int p1 = topLeftVertex + verticesOffsets[offsetIndex];
+          int p2 = topLeftVertex + verticesOffsets[(offsetIndex + 1) % verticesOffsets.length];
+          Endpoints selectedEdgeEndpoints = new Endpoints(p1, p2);
+          DotsAndBoxesEdge selectedEdge = endpointsToEdge.get(selectedEdgeEndpoints);
+          tileEdges[offsetIndex] = selectedEdge;
+        }
+        DotsAndBoxesTile tile = new DotsAndBoxesTile(topLeftVertex, tileEdges);
+        tiles[r][c] = tile;
+        for (DotsAndBoxesEdge edge : tileEdges) {
+          edgeToTiles.put(edge, tile);
+        }
+      }
+    }
   }
 
   public boolean isValidEdge(Endpoints points) {
@@ -71,9 +90,66 @@ public class DotsAndBoxesBoard extends Board {
     return; // TODO: implement when Dots and Boxes is implemented by executing random turns
   }
 
+  // TODO: clean up and test after implementing some game loop
   public String toString() {
-    String dot = "•";
-    return "NOTE: still need to implement Dots and Boxes board representation"; // TODO: implement when Dots and Boxes
-                                                                                // is implemented
+    StringBuilder sb = new StringBuilder();
+    // ---- Column header ----
+    sb.append("\n     ");
+    for (int c = 0; c <= board_cols; c++) {
+      sb.append(String.format("%-3d", c));
+    }
+    sb.append("\n\n");
+
+    // ---- Board rendering ----
+    for (int r = 0; r <= board_rows; r++) {
+
+      // Row label for dots line
+      sb.append(String.format("%-3d  ", r));
+
+      // ----- Dots + Horizontal edges -----
+      for (int c = 0; c <= board_cols; c++) {
+
+        sb.append("•");
+
+        if (c < board_cols) {
+          int p1 = r * 10 + c;
+          int p2 = p1 + 1;
+          Endpoints e = new Endpoints(p1, p2);
+          DotsAndBoxesEdge edge = endpointsToEdge.get(e);
+
+          if (edge != null && edge.isEdgeDrawn()) {
+            sb.append("──");
+          } else {
+            sb.append("  ");
+          }
+        }
+      }
+      sb.append("\n");
+
+      // ----- Vertical edges (skip last dot row) -----
+      if (r < board_rows) {
+        sb.append("     ");
+        for (int c = 0; c <= board_cols; c++) {
+          int p1 = r * 10 + c;
+          int p2 = p1 + 10;
+          Endpoints e = new Endpoints(p1, p2);
+          DotsAndBoxesEdge edge = endpointsToEdge.get(e);
+          if (edge != null && edge.isEdgeDrawn()) {
+            sb.append("│  ");
+          } else {
+            sb.append("   ");
+          }
+        }
+        sb.append("\n");
+      }
+    }
+    return sb.toString();
   }
+  // public String toString() {
+  // String dot = "•";
+  // return "NOTE: still need to implement Dots and Boxes board representation";
+  // // TODO: implement when Dots and Boxes
+  // // is implemented
+
+  // }
 }
