@@ -4,6 +4,7 @@ public class Player {
   private String name;
   private int moves;
   private int gamesWon;
+  private int boxesOwned;
 
   /**
    * Constructor for Player
@@ -13,6 +14,7 @@ public class Player {
   public Player(String playerName) {
     name = playerName;
     moves = 0;
+    boxesOwned = 0;
     gamesWon = 0;
   }
 
@@ -46,6 +48,18 @@ public class Player {
    */
   public int getNumberOfMoves() {
     return moves;
+  }
+
+  public void incrementNumberOfBoxesOwned() {
+    boxesOwned++;
+  }
+
+  public void resetNumberOfBoxesOwned() {
+    boxesOwned = 0;
+  }
+
+  public int getNumberOfBoxesOwned() {
+    return boxesOwned;
   }
 
   /**

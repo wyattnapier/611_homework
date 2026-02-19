@@ -35,16 +35,18 @@ public class DotsAndBoxesTile implements Tile {
    * 
    * @param playerThatAddedLastEdge enum value for the player that most recently
    *                                marked an edge (player1 or player2)
+   * @return true if input player just completed it and false otherwise
    */
-  public void setIsComplete(DotsAndBoxesOwnership playerThatAddedLastEdge) {
+  public Boolean setIsComplete(DotsAndBoxesOwnership playerThatAddedLastEdge) {
     if (isComplete())
-      return; // don't change ownership
+      return false; // don't change ownership
     for (DotsAndBoxesEdge edge : edges) {
       if (!edge.edgeHasOwner()) {
-        return; // owner is still nobody, no need to change
+        return false; // owner is still nobody, no need to change
       }
     }
     owner = playerThatAddedLastEdge;
+    return true;
   }
 
   // TODO: is it possible to change colors?

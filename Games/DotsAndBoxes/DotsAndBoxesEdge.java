@@ -32,4 +32,12 @@ public class DotsAndBoxesEdge {
   public Endpoints getEdgeEndpoints() {
     return edgeEndpoints;
   }
+
+  @Override
+  public String toString() {
+    int p1 = edgeEndpoints.p1;
+    int p2 = edgeEndpoints.p2;
+    String output = p1 + ", " + p2 + " is owned by " + edgeOwner;
+    return output;
+  }
 }

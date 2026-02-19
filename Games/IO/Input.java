@@ -99,8 +99,8 @@ public class Input {
     }
   }
 
-  public Endpoints getEndpointsForNewLine() {
-    String prompt = "\nSelect the points that you would like to draw a line between." +
+  public Endpoints getEndpointsForNewLine(String playerName) {
+    String prompt = "\n" + playerName + ", select the points that you would like to draw a line between." +
         " Enter them in the following format: r1 c1 r2 c2.\nInput the points here (space separated): ";
     while (true) {
       try {
