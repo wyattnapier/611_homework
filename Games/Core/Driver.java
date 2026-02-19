@@ -46,7 +46,15 @@ public class Driver {
           break;
         case "d":
           if (player2 == null) {
-            String player2NameInput = input.getUsername("Player 2");
+            String player2NameInput;
+            while (true) {
+              player2NameInput = input.getUsername("Player 2");
+              if (player2NameInput.equals(player1.getPlayerName())) {
+                System.out.println("Invalid input. Player 2 cannot have same name as Player 1");
+              } else {
+                break;
+              }
+            }
             player2 = new Player(player2NameInput);
           }
           game = new DotsAndBoxesGame(player1, player2, input);
@@ -63,7 +71,7 @@ public class Driver {
         game.setupAndPlayMultipleGames();
       // add option to quit after playing first game
       if (firstRun) {
-        gameOptions.put("q", "quitting all games"); // TODO: reorder so this is last
+        gameOptions.put("q", "quitting all games");
         firstRun = false;
       }
     } while (continuePlaying);

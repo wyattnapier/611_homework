@@ -3,7 +3,6 @@ package Games.DotsAndBoxes;
 import java.util.*;
 import Games.Core.Board;
 import Games.Core.Endpoints;
-import Games.Core.Player;
 
 public class DotsAndBoxesBoard extends Board {
   private Map<Endpoints, DotsAndBoxesEdge> endpointsToEdge = new HashMap<>(); // maps endpoints to actual edge objects
@@ -62,7 +61,7 @@ public class DotsAndBoxesBoard extends Board {
   }
 
   public boolean isValidEdge(Endpoints points) {
-    if (!isWithinBounds(points))
+    if (points == null || !isWithinBounds(points))
       return false;
     boolean isHorizontallyAdjacent = Math.abs(points.p1 - points.p2) == 1;
     boolean isVerticallyAdjacent = Math.abs(points.p1 - points.p2) == 10;
@@ -109,6 +108,9 @@ public class DotsAndBoxesBoard extends Board {
     return true;
   }
 
+  /**
+   * @return true if the entire board is complete
+   */
   public boolean isSolved() {
     for (int i = 0; i < board_rows; i++) {
       for (int j = 0; j < board_cols; j++) {
@@ -120,8 +122,34 @@ public class DotsAndBoxesBoard extends Board {
     return true;
   }
 
+  /**
+   * function for testing the final win state of the board without having to play
+   * the game
+   * NOTE: does not properly give a player another turn if they complete a tile
+   */
   public void setBoardToSolvedState() {
-    return; // TODO: implement when Dots and Boxes is implemented by executing random turns
+    List<Endpoints> allEdges = new ArrayList<>(endpointsToEdge.keySet());
+    Collections.shuffle(allEdges); // Randomize the order of moves
+    DotsAndBoxesOwnership owner = DotsAndBoxesOwnership.PLAYER1;
+    for (Endpoints e : allEdges) {
+      DotsAndBoxesEdge edge = endpointsToEdge.get(e);
+      if (!edge.edgeHasOwner()) {
+        // Alternate which player marks an edge
+        owner = (owner == DotsAndBoxesOwnership.PLAYER2) ? DotsAndBoxesOwnership.PLAYER1
+            : DotsAndBoxesOwnership.PLAYER2;
+        markEdge(e, owner);
+      }
+    }
+  }
+
+  public int countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership owner) {
+    int count = 0;
+    for (int r = 0; r < board_rows; r++) {
+      for (int c = 0; c < board_cols; c++) {
+        count += tiles[r][c].getTileOwner() == owner ? 1 : 0;
+      }
+    }
+    return count;
   }
 
   public void incrementNumberOfCompletedTiles() {

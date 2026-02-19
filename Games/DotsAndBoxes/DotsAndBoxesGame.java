@@ -1,9 +1,6 @@
 package Games.DotsAndBoxes;
 
-import Games.IO.Input;
-
 import java.util.Random;
-
 import Games.Core.*;
 
 public class DotsAndBoxesGame extends Game {
@@ -24,14 +21,16 @@ public class DotsAndBoxesGame extends Game {
 
   public void playSingleGame(int rows, int cols) {
     board = new DotsAndBoxesBoard(rows, cols);
-    int randomPlayerInt = rand.nextInt(2) + 1;
-    currentPlayer = (randomPlayerInt == 1) ? player1 : player2;
+    Boolean randomPlayerBool = rand.nextBoolean();
+    currentPlayer = randomPlayerBool ? player1 : player2;
 
     MoveOutcome gameResult = MoveOutcome.CONTINUE_PLAYING;
     while (gameResult == MoveOutcome.CONTINUE_PLAYING) {
       currentPlayer = (currentPlayer.equals(player1)) ? player2 : player1; // swap current player
       gameResult = playSingleMove();
     }
+
+    printGameStatus();
 
     if (gameResult == MoveOutcome.QUIT) {
       Player winner = (currentPlayer.equals(player1)) ? player2 : player1; // other player wins
@@ -41,53 +40,100 @@ public class DotsAndBoxesGame extends Game {
     if (gameResult == MoveOutcome.WIN) {
       int player1NumBoxesOwned = player1.getNumberOfBoxesOwned();
       int player2NumBoxesOwned = player2.getNumberOfBoxesOwned();
-      System.out.println(player1.getPlayerName() + " had " + player1NumBoxesOwned + " and " + player2.getPlayerName()
-          + " had " + player2NumBoxesOwned);
       if (player1NumBoxesOwned == player2NumBoxesOwned) {
         System.out.println("The game is a tie!");
       } else {
         Player winner = player1NumBoxesOwned > player2NumBoxesOwned ? player1 : player2;
         winner.incrementGamesWon();
-        System.out.println(winner.getPlayerName() + "wins!");
+        System.out.println(winner.getPlayerName() + " wins!");
       }
     }
   }
 
   public MoveOutcome playSingleMove() {
     int numCompletedTiles = board.getNumberOfCompletedTiles();
-    System.out.println(board);
+    printGameStatus();
     DotsAndBoxesOwnership currentOwner = currentPlayer.equals(player1) ? DotsAndBoxesOwnership.PLAYER1
         : DotsAndBoxesOwnership.PLAYER2;
+    // attempt to mark an edge or quit game
+    Endpoints points = null;
     Boolean edgeSuccessfullyDrawn = false;
     while (!edgeSuccessfullyDrawn) {
-      Endpoints points = getUserInputEndpoints();
+      points = getUserInputEndpoints();
+      // checks for special cases like 'q' and 'w'
+      if (points == null) {
+        if (board.isSolved()) {
+          return MoveOutcome.WIN;
+        }
+        return MoveOutcome.QUIT;
+      }
       edgeSuccessfullyDrawn = board.markEdge(points, currentOwner);
       if (!edgeSuccessfullyDrawn) {
         System.out.println("You can't place an edge there. Try again.");
       }
     }
-    // TODO: need to figure out how to add a quit early option
-    if (board.isSolved()) {
-      return MoveOutcome.WIN;
-    } else if (board.getNumberOfCompletedTiles() > numCompletedTiles) {
-      for (int i = 0; i < board.getNumberOfCompletedTiles() - numCompletedTiles; i++) {
-        currentPlayer.incrementNumberOfBoxesOwned(); // increment based on number of tiles completed
-      }
+    // handle a successful move
+    // first increment number of boxes owned by current user
+    for (int i = 0; i < board.getNumberOfCompletedTiles() - numCompletedTiles; i++) {
+      currentPlayer.incrementNumberOfBoxesOwned(); // increment based on number of tiles completed
+    }
+    // let user play another round if they completed a tile
+    if (board.getNumberOfCompletedTiles() > numCompletedTiles) {
       return playSingleMove(); // recursively call it to see future outcome
+    } else if (board.isSolved()) {
+      return MoveOutcome.WIN;
     } else {
       return MoveOutcome.CONTINUE_PLAYING;
     }
   }
 
+  /**
+   * handles user turn input which can either be quit/win/endpoints for line
+   * if win selected, it sets board to solved state for testing
+   * 
+   * @return user selected valid endpoints or null for quit or win
+   */
   private Endpoints getUserInputEndpoints() {
     String currentPlayerName = currentPlayer.getPlayerName();
-    Endpoints dangerousEndpoints = input.getEndpointsForNewLine(currentPlayerName); // unvalidated endpoints
-    while (!board.isValidEdge(dangerousEndpoints)) {
+    while (true) {
+      String raw = input.getRawEndpointInput(currentPlayerName); // Get the string "q", "w", or "0 0 0 1"
+
+      if (raw.equals("q")) {
+        return null; // Signal to playSingleMove that the user quit
+      }
+
+      if (raw.equals("w")) {
+        board.setBoardToSolvedState();
+        // update the player win count by counting the number of squares
+        player1.setNumberOfBoxesOwner(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership.PLAYER1));
+        player2.setNumberOfBoxesOwner(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership.PLAYER2));
+        return null; // Signal to playSingleMove to check for a win immediately
+      }
+
+      Endpoints points = input.parseUserInputEndpoints(raw);
+      if (board.isValidEdge(points)) {
+        return points;
+      }
       System.out.println("Invalid input. Try again.\n");
-      dangerousEndpoints = input.getEndpointsForNewLine(currentPlayerName); // get new pair
     }
-    Endpoints validEndpoints = dangerousEndpoints;
-    return validEndpoints;
+  }
+
+  private void printGameStatus() {
+    printScoreboard();
+    System.out.println(board);
+  }
+
+  private void printScoreboard() {
+    String reset = DotsAndBoxesOwnership.getReset();
+    String p1Color = DotsAndBoxesOwnership.PLAYER1.getColor();
+    String p2Color = DotsAndBoxesOwnership.PLAYER2.getColor();
+    System.out.println("\n============================");
+    System.out.println("      CURRENT SCORE");
+    System.out.println(String.format("  %s%s%s: %d boxes",
+        p1Color, player1.getPlayerName(), reset, player1.getNumberOfBoxesOwned()));
+    System.out.println(String.format("  %s%s%s: %d boxes",
+        p2Color, player2.getPlayerName(), reset, player2.getNumberOfBoxesOwned()));
+    System.out.println("============================");
   }
 
   public int getMinDimension() {

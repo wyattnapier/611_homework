@@ -54,6 +54,10 @@ public class Player {
     boxesOwned++;
   }
 
+  public void setNumberOfBoxesOwner(int count) {
+    boxesOwned = count;
+  }
+
   public void resetNumberOfBoxesOwned() {
     boxesOwned = 0;
   }

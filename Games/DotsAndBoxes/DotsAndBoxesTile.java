@@ -22,6 +22,10 @@ public class DotsAndBoxesTile implements Tile {
     }
   }
 
+  public DotsAndBoxesOwnership getTileOwner() {
+    return owner;
+  }
+
   /**
    * @return true if square is complete (has all 4 edges drawn)
    */
@@ -49,8 +53,6 @@ public class DotsAndBoxesTile implements Tile {
     return true;
   }
 
-  // TODO: is it possible to change colors?
-  // TODO: better labeling?
   public String toString() {
     switch (owner) {
       case PLAYER1:
@@ -62,19 +64,3 @@ public class DotsAndBoxesTile implements Tile {
     }
   }
 }
-
-/**
- * for the dots and boxes game we want a tile to represent a single square on
- * the grid
- * that means we will need booleans for each of the four sides to represent
- * whether or not they have been claimed by a player, and an integer to
- * represent which player has claimed the tile (if any)
- * we will also want a method to check if the tile has been completed (all four
- * sides claimed) and a method to claim a side of the tile for a player
- * we will also need to keep track of the position of the tile on the grid, so
- * we can determine which tiles are adjacent to it and update the game state
- * accordingly when a player claims a side
- * 
- * will still have a board of tiles but each tile will be more abstracted and
- * will extend to have more game specific information
- */

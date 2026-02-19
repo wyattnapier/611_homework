@@ -2,9 +2,7 @@ package Games.IO;
 
 import java.util.Map;
 import java.util.Scanner;
-
 import Games.Core.Endpoints;
-import Games.DotsAndBoxes.DotsAndBoxesEdge;
 
 public class Input {
   private Scanner scanner;
@@ -78,7 +76,13 @@ public class Input {
     }
   }
 
-  // TODO: would be good to use an enum for dimensionName probably
+  /**
+   * 
+   * @param dimensionName either "rows" or "cols"
+   * @param min           board min dimension
+   * @param max           board max dimension
+   * @return int dimension: min <= dimension <= max
+   */
   public int getIntForBoardDimension(String dimensionName, int min, int max) {
     String prompt = "\nEnter the number of " + dimensionName + " for the board (" + min + "-" + max + "): ";
     while (true) {
@@ -89,6 +93,9 @@ public class Input {
     }
   }
 
+  /**
+   * @return int representing who will be playing the sliding puzzle game
+   */
   public int getSlidingPuzzleCurrentPlayer() {
     String prompt = "\nSelect which player will be playing the sliding puzzle game [1/2]: ";
     while (true) {
@@ -99,21 +106,34 @@ public class Input {
     }
   }
 
-  public Endpoints getEndpointsForNewLine(String playerName) {
+  /**
+   * gets raw input for endpoint selection (or win/quit) as a string
+   * 
+   * @param playerName name of current player
+   * @return string of "w" "q" or endpoints such as "0 0 0 1"
+   */
+  public String getRawEndpointInput(String playerName) {
     String prompt = "\n" + playerName + ", select the points that you would like to draw a line between." +
         " Enter them in the following format: r1 c1 r2 c2.\nInput the points here (space separated): ";
-    while (true) {
-      try {
-        System.out.println(prompt);
-        int r1 = scanner.nextInt();
-        int c1 = scanner.nextInt();
-        int r2 = scanner.nextInt();
-        int c2 = scanner.nextInt();
-        scanner.nextLine(); // consumes the newline
-        return new Endpoints(r1 * 10 + c1, r2 * 10 + c2);
-      } catch (Exception e) {
-        return new Endpoints(-1, -1); // will trigger an error and cause prompting for new input
+    return getStringInput(prompt).toLowerCase().trim();
+  }
+
+  public Endpoints parseUserInputEndpoints(String rawEndpointInput) {
+    if (rawEndpointInput.equals("q") || rawEndpointInput.equals("w")) {
+      return null; // null as special signal that it was quit or win command
+    }
+    try {
+      String[] parts = rawEndpointInput.split("\\s+"); // regex for space
+      if (parts.length != 4) {
+        return new Endpoints(-1, -1); // triggers and error and prompts for new input
       }
+      int r1 = Integer.parseInt(parts[0]);
+      int c1 = Integer.parseInt(parts[1]);
+      int r2 = Integer.parseInt(parts[2]);
+      int c2 = Integer.parseInt(parts[3]);
+      return new Endpoints(r1 * 10 + c1, r2 * 10 + c2);
+    } catch (Exception e) {
+      return new Endpoints(-1, -1); // will trigger an error and cause prompting for new input
     }
   }
 
