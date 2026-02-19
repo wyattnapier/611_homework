@@ -9,9 +9,9 @@ public class DotsAndBoxesGame implements Game {
   private int MAX_DIMENSION = 9;
   private Player player1, player2;
 
-  public DotsAndBoxesGame(String player1, String player2, Games.IO.Input input) {
-    this.player1 = new Player(player1);
-    this.player2 = new Player(player2);
+  public DotsAndBoxesGame(Player player1, Player player2, Games.IO.Input input) {
+    this.player1 = player1;
+    this.player2 = player2;
     this.input = input;
   }
 

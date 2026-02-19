@@ -22,8 +22,8 @@ public class SlidingPuzzleGame implements Game {
    * 
    * @param playerName name of the player
    */
-  public SlidingPuzzleGame(String playerName, Input input) {
-    player = new Player(playerName);
+  public SlidingPuzzleGame(Player player, Input input) {
+    this.player = player;
     this.input = input;
   }
 
