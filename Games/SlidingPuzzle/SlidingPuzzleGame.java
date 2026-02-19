@@ -68,21 +68,22 @@ public class SlidingPuzzleGame extends Game {
     String selectedTileValue = input.getStringInput("Enter the tile number to move or 'q' to quit: ");
     System.out.println();
 
-    if (selectedTileValue.equalsIgnoreCase("q")) {
-      return MoveOutcome.QUIT;
-    }
-    if (selectedTileValue.equalsIgnoreCase("w")) {
-      board.setBoardToSolvedState();
-      System.out.println(board);
-      return MoveOutcome.WIN;
-    }
-    if (board.swapTile(selectedTileValue)) {
-      player.incrementMoves();
-      System.out.println(board);
-      return board.isSolved() ? MoveOutcome.WIN : MoveOutcome.CONTINUE_PLAYING;
-    } else {
-      System.out.print("Invalid move. ");
-      return MoveOutcome.CONTINUE_PLAYING;
+    switch (selectedTileValue.toLowerCase()) {
+      case "q":
+        return MoveOutcome.QUIT;
+      case "w":
+        board.setBoardToSolvedState();
+        System.out.println(board);
+        return MoveOutcome.WIN;
+      default:
+        if (board.swapTile(selectedTileValue)) {
+          player.incrementMoves();
+          System.out.println(board);
+          return board.isSolved() ? MoveOutcome.WIN : MoveOutcome.CONTINUE_PLAYING;
+        } else {
+          System.out.print("Invalid move. ");
+          return MoveOutcome.CONTINUE_PLAYING;
+        }
     }
   }
 
