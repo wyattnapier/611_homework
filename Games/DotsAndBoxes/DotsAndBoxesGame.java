@@ -2,7 +2,7 @@ package Games.DotsAndBoxes;
 
 import java.util.Random;
 import Games.Core.*;
-import Games.Enums.DotsAndBoxesOwnership;
+import Games.Enums.DotsAndBoxesOwnershipEnum;
 import Games.Enums.MoveOutcomeEnum;
 
 /**
@@ -76,8 +76,8 @@ public class DotsAndBoxesGame extends Game {
   public MoveOutcomeEnum playSingleMove() {
     int numCompletedTiles = board.getNumberOfCompletedTiles();
     printGameStatus();
-    DotsAndBoxesOwnership currentOwner = currentPlayer.equals(player1) ? DotsAndBoxesOwnership.PLAYER1
-        : DotsAndBoxesOwnership.PLAYER2;
+    DotsAndBoxesOwnershipEnum currentOwner = currentPlayer.equals(player1) ? DotsAndBoxesOwnershipEnum.PLAYER1
+        : DotsAndBoxesOwnershipEnum.PLAYER2;
     // attempt to mark an edge or quit game
     LineEndpoints points = null;
     Boolean edgeSuccessfullyDrawn = false;
@@ -129,8 +129,8 @@ public class DotsAndBoxesGame extends Game {
       if (raw.equals("w")) {
         board.setBoardToSolvedState();
         // update the player win count by counting the number of squares
-        player1.setNumberOfBoxesOwned(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership.PLAYER1));
-        player2.setNumberOfBoxesOwned(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership.PLAYER2));
+        player1.setNumberOfBoxesOwned(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnershipEnum.PLAYER1));
+        player2.setNumberOfBoxesOwned(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnershipEnum.PLAYER2));
         return null; // Signal to playSingleMove to check for a win immediately
       }
 
@@ -154,9 +154,9 @@ public class DotsAndBoxesGame extends Game {
    * prints the scoreboard
    */
   private void printScoreboard() {
-    String reset = DotsAndBoxesOwnership.getReset();
-    String p1Color = DotsAndBoxesOwnership.PLAYER1.getColor();
-    String p2Color = DotsAndBoxesOwnership.PLAYER2.getColor();
+    String reset = DotsAndBoxesOwnershipEnum.getReset();
+    String p1Color = DotsAndBoxesOwnershipEnum.PLAYER1.getColor();
+    String p2Color = DotsAndBoxesOwnershipEnum.PLAYER2.getColor();
     System.out.println("\n============================");
     System.out.println("      CURRENT SCORE");
     System.out.println(String.format("  %s%s%s: %d boxes",

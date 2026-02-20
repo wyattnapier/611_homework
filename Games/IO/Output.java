@@ -1,7 +1,7 @@
 package Games.IO;
 
 import Games.Core.Player;
-import Games.Enums.DotsAndBoxesOwnership;
+import Games.Enums.DotsAndBoxesOwnershipEnum;
 
 public class Output {
   public void printWelcomeMessage() {
@@ -12,11 +12,11 @@ public class Output {
   public void printFinalEndMessage(Player p1, Player p2) {
     System.out.println("\nFarewell, thank you for playing my games!");
     System.out.println(
-        DotsAndBoxesOwnership.PLAYER1.getColor() + p1.getPlayerName() + DotsAndBoxesOwnership.getReset() + " won "
+        DotsAndBoxesOwnershipEnum.PLAYER1.getColor() + p1.getPlayerName() + DotsAndBoxesOwnershipEnum.getReset() + " won "
             + p1.getNumberOfGamesWon() + " games");
     if (p2 != null) {
       System.out.println(
-          DotsAndBoxesOwnership.PLAYER2.getColor() + p2.getPlayerName() + DotsAndBoxesOwnership.getReset() + " won "
+          DotsAndBoxesOwnershipEnum.PLAYER2.getColor() + p2.getPlayerName() + DotsAndBoxesOwnershipEnum.getReset() + " won "
               + p2.getNumberOfGamesWon() + " games");
     }
   }

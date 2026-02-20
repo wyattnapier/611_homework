@@ -1,7 +1,7 @@
 package Games.DotsAndBoxes;
 
 import Games.Core.LineEndpoints;
-import Games.Enums.DotsAndBoxesOwnership;
+import Games.Enums.DotsAndBoxesOwnershipEnum;
 
 /**
  * This class is an edge for the dots and boxes game. Each edge will have
@@ -9,7 +9,7 @@ import Games.Enums.DotsAndBoxesOwnership;
  */
 public class DotsAndBoxesEdge {
   private LineEndpoints edgeEndpoints; // two endpoint of a line
-  private DotsAndBoxesOwnership edgeOwner = DotsAndBoxesOwnership.NOBODY;
+  private DotsAndBoxesOwnershipEnum edgeOwner = DotsAndBoxesOwnershipEnum.NOBODY;
 
   public DotsAndBoxesEdge(LineEndpoints ends) {
     edgeEndpoints = ends;
@@ -18,7 +18,7 @@ public class DotsAndBoxesEdge {
   /**
    * @param owner person who drew the edge
    */
-  public void setEdgeOwner(DotsAndBoxesOwnership owner) {
+  public void setEdgeOwner(DotsAndBoxesOwnershipEnum owner) {
     edgeOwner = owner;
   }
 
@@ -26,7 +26,7 @@ public class DotsAndBoxesEdge {
    * @return int representing the edge owner (player 1 or player 2) or 0 if
    *         neither owns it
    */
-  public DotsAndBoxesOwnership getEdgeOwner() {
+  public DotsAndBoxesOwnershipEnum getEdgeOwner() {
     return edgeOwner;
   }
 
@@ -35,7 +35,7 @@ public class DotsAndBoxesEdge {
    * @return true if edge has owner
    */
   public Boolean edgeHasOwner() {
-    return edgeOwner != DotsAndBoxesOwnership.NOBODY;
+    return edgeOwner != DotsAndBoxesOwnershipEnum.NOBODY;
   }
 
   /**
@@ -54,7 +54,7 @@ public class DotsAndBoxesEdge {
   @Override
   public String toString() {
     String line = Math.abs(edgeEndpoints.p1 - edgeEndpoints.p2) == 10 ? "|" : "──";
-    String output = edgeOwner.getColor() + line + DotsAndBoxesOwnership.getReset();
+    String output = edgeOwner.getColor() + line + DotsAndBoxesOwnershipEnum.getReset();
     return output;
   }
 

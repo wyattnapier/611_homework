@@ -1,14 +1,14 @@
 package Games.DotsAndBoxes;
 
 import Games.Core.Tile;
-import Games.Enums.DotsAndBoxesOwnership;
+import Games.Enums.DotsAndBoxesOwnershipEnum;
 
 /**
  * This is a tile specific to the dots and boxes game. It has 4 edges associated
  * with it and is indexed by its topLeftCornerValue
  */
 public class DotsAndBoxesTile implements Tile {
-  private DotsAndBoxesOwnership owner;
+  private DotsAndBoxesOwnershipEnum owner;
   private int[] vertices; // list of corners in square starting top left and going clockwise
   private DotsAndBoxesEdge[] edges; // order edge list as up, right, left, right
   private int[] verticesOffsets = { 0, 10, 11, 1 }; // can use single numbers since max board is 9x9
@@ -19,7 +19,7 @@ public class DotsAndBoxesTile implements Tile {
    *                           tile (will be length 4)
    */
   public DotsAndBoxesTile(int topLeftCornerValue, DotsAndBoxesEdge[] edges) {
-    owner = DotsAndBoxesOwnership.NOBODY;
+    owner = DotsAndBoxesOwnershipEnum.NOBODY;
     vertices = new int[verticesOffsets.length];
     this.edges = edges;
     for (int i = 0; i < verticesOffsets.length; i++) {
@@ -30,7 +30,7 @@ public class DotsAndBoxesTile implements Tile {
   /**
    * @return owner of the tile using enum
    */
-  public DotsAndBoxesOwnership getTileOwner() {
+  public DotsAndBoxesOwnershipEnum getTileOwner() {
     return owner;
   }
 
@@ -38,7 +38,7 @@ public class DotsAndBoxesTile implements Tile {
    * @return true if square is complete (has all 4 edges drawn)
    */
   public boolean isComplete() {
-    return owner != DotsAndBoxesOwnership.NOBODY;
+    return owner != DotsAndBoxesOwnershipEnum.NOBODY;
   }
 
   /**
@@ -49,7 +49,7 @@ public class DotsAndBoxesTile implements Tile {
    *                                marked an edge (player1 or player2)
    * @return true if input player just completed it and false otherwise
    */
-  public Boolean setIsComplete(DotsAndBoxesOwnership playerThatAddedLastEdge) {
+  public Boolean setIsComplete(DotsAndBoxesOwnershipEnum playerThatAddedLastEdge) {
     if (isComplete())
       return false; // don't change ownership
     for (DotsAndBoxesEdge edge : edges) {

@@ -3,7 +3,7 @@ package Games.DotsAndBoxes;
 import java.util.*;
 import Games.Core.Board;
 import Games.Core.LineEndpoints;
-import Games.Enums.DotsAndBoxesOwnership;
+import Games.Enums.DotsAndBoxesOwnershipEnum;
 
 /**
  * this class is for the Board specific to the dots and boxes game
@@ -131,7 +131,7 @@ public class DotsAndBoxesBoard extends Board {
    * @param currentPlayer player who's turn it is
    * @return true if successfully marks and false otherwise
    */
-  public boolean markEdge(LineEndpoints points, DotsAndBoxesOwnership currentPlayer) {
+  public boolean markEdge(LineEndpoints points, DotsAndBoxesOwnershipEnum currentPlayer) {
     if (!isValidEdge(points))
       return false;
     DotsAndBoxesEdge currentEdge = endpointsToEdge.get(points);
@@ -174,13 +174,13 @@ public class DotsAndBoxesBoard extends Board {
   public void setBoardToSolvedState() {
     List<LineEndpoints> allEdges = new ArrayList<>(endpointsToEdge.keySet());
     Collections.shuffle(allEdges); // Randomize the order of moves
-    DotsAndBoxesOwnership owner = DotsAndBoxesOwnership.PLAYER1;
+    DotsAndBoxesOwnershipEnum owner = DotsAndBoxesOwnershipEnum.PLAYER1;
     for (LineEndpoints e : allEdges) {
       DotsAndBoxesEdge edge = endpointsToEdge.get(e);
       if (!edge.edgeHasOwner()) {
         // Alternate which player marks an edge
-        owner = (owner == DotsAndBoxesOwnership.PLAYER2) ? DotsAndBoxesOwnership.PLAYER1
-            : DotsAndBoxesOwnership.PLAYER2;
+        owner = (owner == DotsAndBoxesOwnershipEnum.PLAYER2) ? DotsAndBoxesOwnershipEnum.PLAYER1
+            : DotsAndBoxesOwnershipEnum.PLAYER2;
         markEdge(e, owner);
       }
     }
@@ -192,7 +192,7 @@ public class DotsAndBoxesBoard extends Board {
    * @param owner Player1 or Player2 or Nobody
    * @return number of boxes owned by the input owner
    */
-  public int countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership owner) {
+  public int countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnershipEnum owner) {
     int count = 0;
     for (int r = 0; r < board_rows; r++) {
       for (int c = 0; c < board_cols; c++) {
@@ -267,7 +267,7 @@ public class DotsAndBoxesBoard extends Board {
             DotsAndBoxesTile tile = tiles[r][c];
             if (tile.isComplete()) {
               String color = tile.getTileOwner().getColor();
-              sb.append(color + tile.toString() + " " + DotsAndBoxesOwnership.getReset());
+              sb.append(color + tile.toString() + " " + DotsAndBoxesOwnershipEnum.getReset());
             } else {
               sb.append("  ");
             }
