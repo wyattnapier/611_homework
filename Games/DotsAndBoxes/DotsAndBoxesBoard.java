@@ -2,7 +2,7 @@ package Games.DotsAndBoxes;
 
 import java.util.*;
 import Games.Core.Board;
-import Games.Core.Endpoints;
+import Games.Core.LineEndpoints;
 import Games.Enums.DotsAndBoxesOwnership;
 
 /**
@@ -12,7 +12,7 @@ import Games.Enums.DotsAndBoxesOwnership;
  * completed tiles
  */
 public class DotsAndBoxesBoard extends Board {
-  private Map<Endpoints, DotsAndBoxesEdge> endpointsToEdge = new HashMap<>(); // maps endpoints to actual edge
+  private Map<LineEndpoints, DotsAndBoxesEdge> endpointsToEdge = new HashMap<>(); // maps endpoints to actual edge
                                                                                   // objects
   private Map<DotsAndBoxesEdge, List<DotsAndBoxesTile>> edgeToTiles = new HashMap<>(); // maps edges to the tiles that
                                                                                        // they're a part of
@@ -31,11 +31,11 @@ public class DotsAndBoxesBoard extends Board {
         for (int offset : edgeOffsets) {
           int p1 = r * 10 + c;
           int p2 = p1 + offset;
-          Endpoints pointPair = new Endpoints(p1, p2);
+          LineEndpoints pointPair = new LineEndpoints(p1, p2);
           if (isValidEdge(pointPair)) {
             DotsAndBoxesEdge edge = new DotsAndBoxesEdge(pointPair);
             endpointsToEdge.put(pointPair, edge);
-            Endpoints swappedPointPair = new Endpoints(p2, p1);
+            LineEndpoints swappedPointPair = new LineEndpoints(p2, p1);
             endpointsToEdge.put(swappedPointPair, edge);
           }
         }
@@ -51,7 +51,7 @@ public class DotsAndBoxesBoard extends Board {
         for (int offsetIndex = 0; offsetIndex < verticesOffsets.length; offsetIndex++) {
           int p1 = topLeftVertex + verticesOffsets[offsetIndex];
           int p2 = topLeftVertex + verticesOffsets[(offsetIndex + 1) % verticesOffsets.length];
-          Endpoints selectedEdgeEndpoints = new Endpoints(p1, p2);
+          LineEndpoints selectedEdgeEndpoints = new LineEndpoints(p1, p2);
           DotsAndBoxesEdge selectedEdge = endpointsToEdge.get(selectedEdgeEndpoints);
           tileEdges[offsetIndex] = selectedEdge;
         }
@@ -67,7 +67,7 @@ public class DotsAndBoxesBoard extends Board {
   /**
    * @param points is an EndpointsEnum
    */
-  public boolean isValidEdge(Endpoints points) {
+  public boolean isValidEdge(LineEndpoints points) {
     if (points == null || !isWithinBounds(points))
       return false;
     boolean isHorizontallyAdjacent = Math.abs(points.p1 - points.p2) == 1;
@@ -76,11 +76,11 @@ public class DotsAndBoxesBoard extends Board {
   }
 
   public boolean isValidEdge(DotsAndBoxesEdge edge) {
-    Endpoints pointPair = edge.getEdgeEndpoints();
+    LineEndpoints pointPair = edge.getEdgeEndpoints();
     return isValidEdge(pointPair);
   }
 
-  public boolean isWithinBounds(Endpoints points) {
+  public boolean isWithinBounds(LineEndpoints points) {
     return isPointWithinBounds(points.p1) && isPointWithinBounds(points.p2);
   }
 
@@ -106,7 +106,7 @@ public class DotsAndBoxesBoard extends Board {
    * @param currentPlayer
    * @return true if successfully marks and false otherwise
    */
-  public boolean markEdge(Endpoints points, DotsAndBoxesOwnership currentPlayer) {
+  public boolean markEdge(LineEndpoints points, DotsAndBoxesOwnership currentPlayer) {
     if (!isValidEdge(points))
       return false;
     DotsAndBoxesEdge currentEdge = endpointsToEdge.get(points);
@@ -145,10 +145,10 @@ public class DotsAndBoxesBoard extends Board {
    * NOTE: does not properly give a player another turn if they complete a tile
    */
   public void setBoardToSolvedState() {
-    List<Endpoints> allEdges = new ArrayList<>(endpointsToEdge.keySet());
+    List<LineEndpoints> allEdges = new ArrayList<>(endpointsToEdge.keySet());
     Collections.shuffle(allEdges); // Randomize the order of moves
     DotsAndBoxesOwnership owner = DotsAndBoxesOwnership.PLAYER1;
-    for (Endpoints e : allEdges) {
+    for (LineEndpoints e : allEdges) {
       DotsAndBoxesEdge edge = endpointsToEdge.get(e);
       if (!edge.edgeHasOwner()) {
         // Alternate which player marks an edge
@@ -194,7 +194,7 @@ public class DotsAndBoxesBoard extends Board {
         if (c < board_cols) {
           int p1 = r * 10 + c;
           int p2 = p1 + 1;
-          DotsAndBoxesEdge edge = endpointsToEdge.get(new Endpoints(p1, p2));
+          DotsAndBoxesEdge edge = endpointsToEdge.get(new LineEndpoints(p1, p2));
 
           if (edge != null && edge.edgeHasOwner()) {
             // COLOR THE HORIZONTAL EDGE
@@ -214,7 +214,7 @@ public class DotsAndBoxesBoard extends Board {
           // Handle Vertical Edge
           int p1 = r * 10 + c;
           int p2 = p1 + 10;
-          DotsAndBoxesEdge vEdge = endpointsToEdge.get(new Endpoints(p1, p2));
+          DotsAndBoxesEdge vEdge = endpointsToEdge.get(new LineEndpoints(p1, p2));
 
           if (vEdge != null && vEdge.edgeHasOwner()) {
             String color = vEdge.getEdgeOwner().getColor();
