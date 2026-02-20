@@ -78,10 +78,11 @@ public class DotsAndBoxesGame extends Game {
       currentPlayer.incrementNumberOfBoxesOwned(); // increment based on number of tiles completed
     }
     // let user play another round if they completed a tile
-    if (board.getNumberOfCompletedTiles() > numCompletedTiles) {
-      return playSingleMove(); // recursively call it to see future outcome
-    } else if (board.isSolved()) {
+    if (board.isSolved()) {
+      System.out.println("within single move the game is done");
       return MoveOutcome.WIN;
+    } else if (board.getNumberOfCompletedTiles() > numCompletedTiles) {
+      return playSingleMove(); // recursively call it to see future outcome
     } else {
       return MoveOutcome.CONTINUE_PLAYING;
     }

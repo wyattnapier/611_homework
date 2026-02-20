@@ -12,10 +12,6 @@ public class DotsAndBoxesBoard extends Board {
                                                     // and cols to 9x9
   private DotsAndBoxesTile[][] tiles;
   private int numCompletedTiles;
-  // colors for the dots and boxes
-  private static final String RESET = "\u001B[0m"; // resets color to default
-  private static final String RED = "\u001B[31m"; // Player 1
-  private static final String BLUE = "\u001B[34m"; // Player 2
 
   public DotsAndBoxesBoard(int rows, int cols) {
     super(rows, cols);
@@ -160,10 +156,9 @@ public class DotsAndBoxesBoard extends Board {
     return numCompletedTiles;
   }
 
-  // TODO: cleanup
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    // ---- Column header ----
+    // column header
     sb.append("\n     ");
     for (int c = 0; c <= board_cols; c++) {
       sb.append(String.format("%-3d", c));
@@ -171,12 +166,10 @@ public class DotsAndBoxesBoard extends Board {
     sb.append("\n\n");
 
     for (int r = 0; r <= board_rows; r++) {
-      sb.append(String.format("%-3d  ", r)); // Row label
-
-      // ----- Dots + Horizontal edges -----
+      sb.append(String.format("%-3d  ", r)); // row label
+      // dots and horizontal edges
       for (int c = 0; c <= board_cols; c++) {
         sb.append("•");
-
         if (c < board_cols) {
           int p1 = r * 10 + c;
           int p2 = p1 + 1;
@@ -184,8 +177,8 @@ public class DotsAndBoxesBoard extends Board {
 
           if (edge != null && edge.edgeHasOwner()) {
             // COLOR THE HORIZONTAL EDGE
-            String color = (edge.getEdgeOwner() == DotsAndBoxesOwnership.PLAYER1) ? RED : BLUE;
-            sb.append(color + "──" + RESET);
+            String color = edge.getEdgeOwner().getColor();
+            sb.append(color + "──" + DotsAndBoxesOwnership.getReset());
           } else {
             sb.append("  ");
           }
@@ -193,29 +186,28 @@ public class DotsAndBoxesBoard extends Board {
       }
       sb.append("\n");
 
-      // ----- Vertical edges + Tile Centers -----
+      // vertical edges and tile centers
       if (r < board_rows) {
         sb.append("     ");
         for (int c = 0; c <= board_cols; c++) {
-          // 1. Handle Vertical Edge
+          // Handle Vertical Edge
           int p1 = r * 10 + c;
           int p2 = p1 + 10;
           DotsAndBoxesEdge vEdge = endpointsToEdge.get(new Endpoints(p1, p2));
 
           if (vEdge != null && vEdge.edgeHasOwner()) {
-            String color = (vEdge.getEdgeOwner() == DotsAndBoxesOwnership.PLAYER1) ? RED : BLUE;
-            sb.append(color + "│" + RESET);
+            String color = vEdge.getEdgeOwner().getColor();
+            sb.append(color + "│" + DotsAndBoxesOwnership.getReset());
           } else {
             sb.append(" ");
           }
 
-          // 2. Handle Tile Center (The space between vertical edges)
+          // handle tile center
           if (c < board_cols) {
             DotsAndBoxesTile tile = tiles[r][c];
             if (tile.isComplete()) {
-              // Check tile.toString() or owner directly
-              String color = (tile.toString().equals("1")) ? RED : BLUE;
-              sb.append(color + tile.toString() + " " + RESET);
+              String color = tile.getTileOwner().getColor();
+              sb.append(color + tile.toString() + " " + DotsAndBoxesOwnership.getReset());
             } else {
               sb.append("  ");
             }
