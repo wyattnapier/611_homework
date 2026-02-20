@@ -3,7 +3,7 @@ package Games.IO;
 import java.util.Map;
 import java.util.Scanner;
 
-import Games.Enums.EndpointsEnum;
+import Games.Core.Endpoints;
 
 public class Input {
   private Scanner scanner;
@@ -119,22 +119,22 @@ public class Input {
     return getStringInput(prompt).toLowerCase().trim();
   }
 
-  public EndpointsEnum parseUserInputEndpoints(String rawEndpointInput) {
+  public Endpoints parseUserInputEndpoints(String rawEndpointInput) {
     if (rawEndpointInput.equals("q") || rawEndpointInput.equals("w")) {
       return null; // null as special signal that it was quit or win command
     }
     try {
       String[] parts = rawEndpointInput.split("\\s+"); // regex for space
       if (parts.length != 4) {
-        return new EndpointsEnum(-1, -1); // triggers and error and prompts for new input
+        return new Endpoints(-1, -1); // triggers and error and prompts for new input
       }
       int r1 = Integer.parseInt(parts[0]);
       int c1 = Integer.parseInt(parts[1]);
       int r2 = Integer.parseInt(parts[2]);
       int c2 = Integer.parseInt(parts[3]);
-      return new EndpointsEnum(r1 * 10 + c1, r2 * 10 + c2);
+      return new Endpoints(r1 * 10 + c1, r2 * 10 + c2);
     } catch (Exception e) {
-      return new EndpointsEnum(-1, -1); // will trigger an error and cause prompting for new input
+      return new Endpoints(-1, -1); // will trigger an error and cause prompting for new input
     }
   }
 

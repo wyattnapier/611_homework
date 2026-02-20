@@ -3,7 +3,6 @@ package Games.DotsAndBoxes;
 import java.util.Random;
 import Games.Core.*;
 import Games.Enums.DotsAndBoxesOwnership;
-import Games.Enums.EndpointsEnum;
 import Games.Enums.MoveOutcomeEnum;
 
 public class DotsAndBoxesGame extends Game {
@@ -59,7 +58,7 @@ public class DotsAndBoxesGame extends Game {
     DotsAndBoxesOwnership currentOwner = currentPlayer.equals(player1) ? DotsAndBoxesOwnership.PLAYER1
         : DotsAndBoxesOwnership.PLAYER2;
     // attempt to mark an edge or quit game
-    EndpointsEnum points = null;
+    Endpoints points = null;
     Boolean edgeSuccessfullyDrawn = false;
     while (!edgeSuccessfullyDrawn) {
       points = getUserInputEndpoints();
@@ -97,7 +96,7 @@ public class DotsAndBoxesGame extends Game {
    * 
    * @return user selected valid endpoints or null for quit or win
    */
-  private EndpointsEnum getUserInputEndpoints() {
+  private Endpoints getUserInputEndpoints() {
     String currentPlayerName = currentPlayer.getPlayerName();
     while (true) {
       String raw = input.getRawEndpointInput(currentPlayerName); // Get the string "q", "w", or "0 0 0 1"
@@ -114,7 +113,7 @@ public class DotsAndBoxesGame extends Game {
         return null; // Signal to playSingleMove to check for a win immediately
       }
 
-      EndpointsEnum points = input.parseUserInputEndpoints(raw);
+      Endpoints points = input.parseUserInputEndpoints(raw);
       if (board.isValidEdge(points)) {
         return points;
       }
