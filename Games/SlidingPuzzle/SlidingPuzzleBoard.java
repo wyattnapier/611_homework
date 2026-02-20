@@ -199,6 +199,10 @@ public class SlidingPuzzleBoard extends Board {
     }
   }
 
+  public boolean isWithinBounds(int x, int y) {
+    return (x >= 0 && x < this.board_rows && y >= 0 && y < this.board_cols);
+  }
+
   @Override
   public String toString() {
     String spacerChunk = (board_rows * board_cols > 10) ? "+----" : "+---";

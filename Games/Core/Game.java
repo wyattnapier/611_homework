@@ -1,6 +1,6 @@
 package Games.Core;
 
-import Games.Enums.MoveOutcome;
+import Games.Enums.MoveOutcomeEnum;
 import Games.IO.Input;
 
 /**
@@ -23,7 +23,7 @@ public abstract class Game {
    * 
    * @return 1 to continue playing, 0 to indicate a win, -1 to quit
    */
-  public abstract MoveOutcome playSingleMove();
+  public abstract MoveOutcomeEnum playSingleMove();
 
   /**
    * sets up and plays multiple games, asking user if they want to play again

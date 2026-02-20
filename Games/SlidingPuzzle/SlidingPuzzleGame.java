@@ -1,8 +1,8 @@
 package Games.SlidingPuzzle;
 
 import Games.Core.Player;
+import Games.Enums.MoveOutcomeEnum;
 import Games.Core.Game;
-import Games.Core.MoveOutcome;
 import Games.IO.Input;
 
 /**
@@ -42,18 +42,18 @@ public class SlidingPuzzleGame extends Game {
 
     player.resetNumberOfMoves();
 
-    MoveOutcome continuePlayingFlag = MoveOutcome.CONTINUE_PLAYING; // 1 to continue, 0 to win, -1 to quit
-    while (continuePlayingFlag == MoveOutcome.CONTINUE_PLAYING) {
+    MoveOutcomeEnum continuePlayingFlag = MoveOutcomeEnum.CONTINUE_PLAYING; // 1 to continue, 0 to win, -1 to quit
+    while (continuePlayingFlag == MoveOutcomeEnum.CONTINUE_PLAYING) {
       continuePlayingFlag = playSingleMove();
     }
 
     // game end message
-    if (continuePlayingFlag == MoveOutcome.WIN) {
+    if (continuePlayingFlag == MoveOutcomeEnum.WIN) {
       player.incrementGamesWon();
       System.out.println("Congratulations! You've won the game!");
       System.out.println("It only took you " + player.getNumberOfMoves() + " moves to win your last game!");
       System.out.println("You've won " + player.getNumberOfGamesWon() + " games!\n");
-    } else if (continuePlayingFlag == MoveOutcome.QUIT) {
+    } else if (continuePlayingFlag == MoveOutcomeEnum.QUIT) {
       System.out.println("You won " + player.getNumberOfGamesWon() + " games!");
     }
   }
@@ -63,25 +63,25 @@ public class SlidingPuzzleGame extends Game {
    * 
    * @return outcome of the move with relation to game loop
    */
-  public MoveOutcome playSingleMove() {
+  public MoveOutcomeEnum playSingleMove() {
     String selectedTileValue = input.getStringInput("Enter the tile number to move or 'q' to quit: ");
     System.out.println();
 
     switch (selectedTileValue.toLowerCase()) {
       case "q":
-        return MoveOutcome.QUIT;
+        return MoveOutcomeEnum.QUIT;
       case "w":
         board.setBoardToSolvedState();
         System.out.println(board);
-        return MoveOutcome.WIN;
+        return MoveOutcomeEnum.WIN;
       default:
         if (board.swapTile(selectedTileValue)) {
           player.incrementMoves();
           System.out.println(board);
-          return board.isSolved() ? MoveOutcome.WIN : MoveOutcome.CONTINUE_PLAYING;
+          return board.isSolved() ? MoveOutcomeEnum.WIN : MoveOutcomeEnum.CONTINUE_PLAYING;
         } else {
           System.out.print("Invalid move. ");
-          return MoveOutcome.CONTINUE_PLAYING;
+          return MoveOutcomeEnum.CONTINUE_PLAYING;
         }
     }
   }
