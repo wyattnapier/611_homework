@@ -64,7 +64,8 @@ public class SlidingPuzzleGame extends Game {
    * @return outcome of the move with relation to game loop
    */
   public MoveOutcomeEnum playSingleMove() {
-    String selectedTileValue = input.getStringInput("Enter the tile number to move or 'q' to quit: ");
+    String selectedTileValue = input
+        .getStringInput(player.getPlayerName() + ", enter the tile number to move or 'q' to quit: ");
     System.out.println();
 
     switch (selectedTileValue.toLowerCase()) {

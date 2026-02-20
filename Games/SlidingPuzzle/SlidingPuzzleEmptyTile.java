@@ -1,5 +1,9 @@
 package Games.SlidingPuzzle;
 
+/**
+ * specific empty tile class to minimize state held in the tile class and
+ * ensures the empty tile still prints correctly
+ */
 public class SlidingPuzzleEmptyTile extends SlidingPuzzleTile {
 
   /**

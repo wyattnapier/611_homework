@@ -5,6 +5,10 @@ import java.util.Scanner;
 
 import Games.Core.LineEndpoints;
 
+/**
+ * this class is used to prompt users for input and parse it to clean up the
+ * code in other classes
+ */
 public class Input {
   private Scanner scanner;
 
@@ -13,23 +17,43 @@ public class Input {
   }
 
   // ------------ STRING INPUT METHODS ------------
+  /**
+   * gets string input from user when provided a prompt
+   * 
+   * @param prompt is what you want to ask user
+   * @return user's string input
+   */
   public String getStringInput(String prompt) {
     System.out.print(prompt);
     return scanner.nextLine();
   }
 
+  /**
+   * gets user input "y" or "n" to see if they want to play again or reprompts if
+   * input isn't valid
+   * 
+   * @return y or n based on if user wants to play again or not
+   */
   public String getPlayAgainInputString() {
     while (true) {
       String input = getStringInput("Would you like to play again? [y/n] ");
       if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("n")) {
         return input;
       } else {
-        System.out.println("Invalid input. Please enter 'y' for yes or 'n' for no.");
-        return getPlayAgainInputString(); // recursively call until valid input is received
+        System.out.println("Invalid input. Please enter 'y' for yes or 'n' for no.\n");
       }
     }
   }
 
+  /**
+   * get user input for game selection
+   * 
+   * @param playerName  name of player
+   * @param gameOptions map of game options. First String is the character that
+   *                    represents it and the second String is a more detailed
+   *                    game title
+   * @return character for game selected
+   */
   public String getGameSelectionInput(String playerName, Map<String, String> gameOptions) {
     while (true) {
       StringBuilder prompt = new StringBuilder("\nHi " + playerName + "! Which game would you like to play? ");
@@ -44,7 +68,6 @@ public class Input {
       } else {
         System.out.println(
             "Invalid game selection. Please enter one of the provided options.");
-        return getGameSelectionInput(playerName, gameOptions); // recursively call until valid input is received
       }
     }
   }
@@ -63,6 +86,12 @@ public class Input {
   }
 
   // ------------ INT INPUT METHODS ------------
+  /**
+   * gets string input from user when provided a prompt
+   * 
+   * @param prompt is what you want to ask user
+   * @return user's string input
+   */
   public int getIntInput(String prompt) {
     try {
       System.out.print(prompt);
@@ -71,13 +100,14 @@ public class Input {
       return output;
     } catch (Exception e) {
       System.err.println("Invalid input. Please enter a valid integer."); // not actual error handling for user input,
-      // just a message to the programmer
+                                                                          // just a message to the programmer
       scanner.nextLine(); // consume the invalid input
       return -1; // return -1 to indicate invalid input
     }
   }
 
   /**
+   * get an int for board size
    * 
    * @param dimensionName either "rows" or "cols"
    * @param min           board min dimension
@@ -97,8 +127,10 @@ public class Input {
   /**
    * @return int representing who will be playing the sliding puzzle game
    */
-  public int getSlidingPuzzleCurrentPlayer() {
-    String prompt = "\nSelect which player will be playing the sliding puzzle game [1/2]: ";
+  public int getSlidingPuzzleCurrentPlayer(String player1Name, String player2Name) {
+    String prompt = "\nSelect which player will be playing the sliding puzzle game. Enter '1' for " + player1Name
+        + " or '2' for "
+        + player2Name + ": ";
     while (true) {
       int currentPlayerInt = getIntInput(prompt);
       if (currentPlayerInt == 1 || currentPlayerInt == 2)
@@ -114,11 +146,19 @@ public class Input {
    * @return string of "w" "q" or endpoints such as "0 0 0 1"
    */
   public String getRawEndpointInput(String playerName) {
-    String prompt = "\n" + playerName + ", select the points that you would like to draw a line between." +
+    String prompt = "\n" + playerName
+        + ", select the points that you would like to draw a line between or enter 'q' to quit." +
         " Enter them in the following format: r1 c1 r2 c2.\nInput the points here (space separated): ";
     return getStringInput(prompt).toLowerCase().trim();
   }
 
+  /**
+   * parses user input for endpints or quit/win
+   * 
+   * @param rawEndpointInput String input by the user that hasn't been parsed yet
+   *                         like " 0 0 0 1"
+   * @return
+   */
   public LineEndpoints parseUserInputEndpoints(String rawEndpointInput) {
     if (rawEndpointInput.equals("q") || rawEndpointInput.equals("w")) {
       return null; // null as special signal that it was quit or win command
@@ -138,6 +178,9 @@ public class Input {
     }
   }
 
+  /**
+   * closes the scanner
+   */
   public void close() {
     scanner.close();
   }

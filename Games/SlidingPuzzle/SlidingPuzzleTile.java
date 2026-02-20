@@ -2,6 +2,10 @@ package Games.SlidingPuzzle;
 
 import Games.Core.Tile;
 
+/**
+ * class implementing the general sliding puzzle tile and the lgoic for updating
+ * its position and checking if it is in the correct final positions
+ */
 public class SlidingPuzzleTile implements Tile {
   private int value; // value of the tile
   private int x, y; // position of the tile

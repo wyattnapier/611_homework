@@ -38,14 +38,20 @@ public class Driver {
     Boolean continuePlaying = true;
     Boolean firstRun = true;
     do {
-      String gameSelection = input.getGameSelectionInput(player1.getPlayerName(), gameOptions);
+      String playersNames = player1.getPlayerName();
+      if (player2 != null) {
+        playersNames = player1.getPlayerName() + " and " + player2.getPlayerName();
+      }
+      String gameSelection = input.getGameSelectionInput(playersNames, gameOptions);
       Game game = null;
       // controls game flow based on game selection
       switch (gameSelection.toLowerCase()) {
         case "s":
           Player currentPlayer = player1;
           if (player2 != null)
-            currentPlayer = input.getSlidingPuzzleCurrentPlayer() == 1 ? player1 : player2;
+            currentPlayer = input.getSlidingPuzzleCurrentPlayer(player1.getPlayerName(), player2.getPlayerName()) == 1
+                ? player1
+                : player2;
           game = new SlidingPuzzleGame(currentPlayer, input);
           break;
         case "d":

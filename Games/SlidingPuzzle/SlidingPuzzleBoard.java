@@ -3,6 +3,10 @@ package Games.SlidingPuzzle;
 import java.util.*;
 import Games.Core.Board;
 
+/**
+ * board specific to the sliding puzzle which controls most state for the
+ * sliding puzzle
+ */
 public class SlidingPuzzleBoard extends Board {
 
   private int emptyTileX, emptyTileY; // coordinates of empty tile
@@ -199,6 +203,9 @@ public class SlidingPuzzleBoard extends Board {
     }
   }
 
+  /**
+   * @return true if points are within bounds
+   */
   public boolean isWithinBounds(int x, int y) {
     return (x >= 0 && x < this.board_rows && y >= 0 && y < this.board_cols);
   }
