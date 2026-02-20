@@ -2,6 +2,9 @@ package Games.DotsAndBoxes;
 
 import java.util.Random;
 import Games.Core.*;
+import Games.Enums.DotsAndBoxesOwnership;
+import Games.Enums.EndpointsEnum;
+import Games.Enums.MoveOutcomeEnum;
 
 public class DotsAndBoxesGame extends Game {
   private int MIN_DIMENSION = 1;
@@ -24,20 +27,20 @@ public class DotsAndBoxesGame extends Game {
     Boolean randomPlayerBool = rand.nextBoolean();
     currentPlayer = randomPlayerBool ? player1 : player2;
 
-    MoveOutcome gameResult = MoveOutcome.CONTINUE_PLAYING;
-    while (gameResult == MoveOutcome.CONTINUE_PLAYING) {
+    MoveOutcomeEnum gameResult = MoveOutcomeEnum.CONTINUE_PLAYING;
+    while (gameResult == MoveOutcomeEnum.CONTINUE_PLAYING) {
       currentPlayer = (currentPlayer.equals(player1)) ? player2 : player1; // swap current player
       gameResult = playSingleMove();
     }
 
     printGameStatus();
 
-    if (gameResult == MoveOutcome.QUIT) {
+    if (gameResult == MoveOutcomeEnum.QUIT) {
       Player winner = (currentPlayer.equals(player1)) ? player2 : player1; // other player wins
       winner.incrementGamesWon();
       System.out.println(currentPlayer.getPlayerName() + " quit the game so " + winner.getPlayerName() + " wins!");
     }
-    if (gameResult == MoveOutcome.WIN) {
+    if (gameResult == MoveOutcomeEnum.WIN) {
       int player1NumBoxesOwned = player1.getNumberOfBoxesOwned();
       int player2NumBoxesOwned = player2.getNumberOfBoxesOwned();
       if (player1NumBoxesOwned == player2NumBoxesOwned) {
@@ -50,22 +53,22 @@ public class DotsAndBoxesGame extends Game {
     }
   }
 
-  public MoveOutcome playSingleMove() {
+  public MoveOutcomeEnum playSingleMove() {
     int numCompletedTiles = board.getNumberOfCompletedTiles();
     printGameStatus();
     DotsAndBoxesOwnership currentOwner = currentPlayer.equals(player1) ? DotsAndBoxesOwnership.PLAYER1
         : DotsAndBoxesOwnership.PLAYER2;
     // attempt to mark an edge or quit game
-    Endpoints points = null;
+    EndpointsEnum points = null;
     Boolean edgeSuccessfullyDrawn = false;
     while (!edgeSuccessfullyDrawn) {
       points = getUserInputEndpoints();
       // checks for special cases like 'q' and 'w'
       if (points == null) {
         if (board.isSolved()) {
-          return MoveOutcome.WIN;
+          return MoveOutcomeEnum.WIN;
         }
-        return MoveOutcome.QUIT;
+        return MoveOutcomeEnum.QUIT;
       }
       edgeSuccessfullyDrawn = board.markEdge(points, currentOwner);
       if (!edgeSuccessfullyDrawn) {
@@ -80,11 +83,11 @@ public class DotsAndBoxesGame extends Game {
     // let user play another round if they completed a tile
     if (board.isSolved()) {
       System.out.println("within single move the game is done");
-      return MoveOutcome.WIN;
+      return MoveOutcomeEnum.WIN;
     } else if (board.getNumberOfCompletedTiles() > numCompletedTiles) {
       return playSingleMove(); // recursively call it to see future outcome
     } else {
-      return MoveOutcome.CONTINUE_PLAYING;
+      return MoveOutcomeEnum.CONTINUE_PLAYING;
     }
   }
 
@@ -94,7 +97,7 @@ public class DotsAndBoxesGame extends Game {
    * 
    * @return user selected valid endpoints or null for quit or win
    */
-  private Endpoints getUserInputEndpoints() {
+  private EndpointsEnum getUserInputEndpoints() {
     String currentPlayerName = currentPlayer.getPlayerName();
     while (true) {
       String raw = input.getRawEndpointInput(currentPlayerName); // Get the string "q", "w", or "0 0 0 1"
@@ -106,12 +109,12 @@ public class DotsAndBoxesGame extends Game {
       if (raw.equals("w")) {
         board.setBoardToSolvedState();
         // update the player win count by counting the number of squares
-        player1.setNumberOfBoxesOwner(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership.PLAYER1));
-        player2.setNumberOfBoxesOwner(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership.PLAYER2));
+        player1.setNumberOfBoxesOwned(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership.PLAYER1));
+        player2.setNumberOfBoxesOwned(board.countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership.PLAYER2));
         return null; // Signal to playSingleMove to check for a win immediately
       }
 
-      Endpoints points = input.parseUserInputEndpoints(raw);
+      EndpointsEnum points = input.parseUserInputEndpoints(raw);
       if (board.isValidEdge(points)) {
         return points;
       }

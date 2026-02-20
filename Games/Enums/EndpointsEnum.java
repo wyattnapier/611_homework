@@ -1,12 +1,12 @@
-package Games.Core;
+package Games.Enums;
 
 import java.util.Objects;
 
-public class Endpoints {
+public class EndpointsEnum {
   public final int p1;
   public final int p2;
 
-  public Endpoints(int endpoint1, int endpoint2) {
+  public EndpointsEnum(int endpoint1, int endpoint2) {
     p1 = endpoint1;
     p2 = endpoint2;
   }
@@ -14,9 +14,9 @@ public class Endpoints {
   public boolean equals(Object o) {
     if (this == o)
       return true;
-    if (!(o instanceof Endpoints))
+    if (!(o instanceof EndpointsEnum))
       return false;
-    Endpoints c = (Endpoints) o;
+    EndpointsEnum c = (EndpointsEnum) o;
     return (p1 == c.p1 && p2 == c.p2) || (p1 == c.p2 && p2 == c.p1); // order doesn't matter for points
   }
 

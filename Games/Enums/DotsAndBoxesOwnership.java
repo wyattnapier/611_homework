@@ -1,6 +1,6 @@
-package Games.DotsAndBoxes;
+package Games.Enums;
 
-enum DotsAndBoxesOwnership {
+public enum DotsAndBoxesOwnership {
   NOBODY("\u001B[0m"), // RESET
   PLAYER1("\u001B[31m"), // RED
   PLAYER2("\u001B[34m"); // BLUE

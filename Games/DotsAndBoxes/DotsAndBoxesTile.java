@@ -1,6 +1,7 @@
 package Games.DotsAndBoxes;
 
 import Games.Core.Tile;
+import Games.Enums.DotsAndBoxesOwnership;
 
 public class DotsAndBoxesTile implements Tile {
   private DotsAndBoxesOwnership owner;

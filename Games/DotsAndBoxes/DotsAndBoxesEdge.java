@@ -1,12 +1,13 @@
 package Games.DotsAndBoxes;
 
-import Games.Core.Endpoints;
+import Games.Enums.DotsAndBoxesOwnership;
+import Games.Enums.EndpointsEnum;
 
 public class DotsAndBoxesEdge {
-  private Endpoints edgeEndpoints; // two endpoint of a line
+  private EndpointsEnum edgeEndpoints; // two endpoint of a line
   private DotsAndBoxesOwnership edgeOwner = DotsAndBoxesOwnership.NOBODY;
 
-  public DotsAndBoxesEdge(Endpoints ends) {
+  public DotsAndBoxesEdge(EndpointsEnum ends) {
     edgeEndpoints = ends;
   }
 
@@ -29,7 +30,7 @@ public class DotsAndBoxesEdge {
     return edgeOwner != DotsAndBoxesOwnership.NOBODY;
   }
 
-  public Endpoints getEdgeEndpoints() {
+  public EndpointsEnum getEdgeEndpoints() {
     return edgeEndpoints;
   }
 
