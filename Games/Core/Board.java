@@ -1,5 +1,9 @@
 package Games.Core;
 
+/**
+ * This class is used to established some shared instance variables for boards
+ * and build a template for important functions that all boards must implement
+ */
 public abstract class Board {
     // board_rows is m and board_cols is n
     protected int board_rows, board_cols; // dimensions of the board
@@ -33,9 +37,7 @@ public abstract class Board {
      * @param y the y index
      * @return true if within bounds, false otherwise
      */
-    public boolean isWithinBounds(int x, int y) {
-        return (x >= 0 && x < this.board_rows && y >= 0 && y < this.board_cols);
-    }
+    public abstract boolean isWithinBounds(int x, int y);
 
     /**
      * Set the board to the solved state for initialization or testing

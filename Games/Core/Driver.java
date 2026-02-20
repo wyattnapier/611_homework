@@ -1,12 +1,16 @@
 package Games.Core;
 
-/* This is the main entry point for the game application */
 import java.util.*;
 
 import Games.IO.*;
 import Games.SlidingPuzzle.SlidingPuzzleGame;
 import Games.DotsAndBoxes.DotsAndBoxesGame;
 
+/**
+ * This is the main entry point for the game application. It runs the game and
+ * controls the very high level control flow, outside of individual games
+ * 
+ */
 public class Driver {
   private Player player1, player2;
   private Input input;
@@ -60,7 +64,7 @@ public class Driver {
           game = new DotsAndBoxesGame(player1, player2, input);
           break;
         case "q":
-          output.printFinalEndMessage();
+          output.printFinalEndMessage(player1, player2);
           continuePlaying = false;
           break;
         default:

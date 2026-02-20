@@ -1,5 +1,6 @@
 package Games.Core;
 
+import Games.Enums.MoveOutcome;
 import Games.IO.Input;
 
 /**
@@ -46,7 +47,21 @@ public abstract class Game {
     } while (playAgainInput.equalsIgnoreCase("y"));
   }
 
+  /**
+   * since boards are square, the dimension limits are the same for rows and
+   * columns and just need one method to get each. This is for the minimum option
+   * for when user inputs requested dimension
+   * 
+   * @return minimum board dimension (e.g. 1 for dots and boxes)
+   */
   abstract public int getMinDimension();
 
+  /**
+   * since boards are square, the dimension limits are the same for rows and
+   * columns and just need one method to get each. This is for the max option
+   * for when user inputs requested dimension
+   * 
+   * @return max board dimension (e.g. 9 for dots and boxes)
+   */
   abstract public int getMaxDimension();
 }

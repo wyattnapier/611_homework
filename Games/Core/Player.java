@@ -1,10 +1,15 @@
 package Games.Core;
 
+/**
+ * This class is used to manage players of games. It stores relevant information
+ * about them and allows that information to be updated and
+ * retrieved via getters and setters.
+ */
 public class Player {
   private String name;
-  private int moves;
-  private int gamesWon;
-  private int boxesOwned;
+  private int moves; // mainly used for sliding puzzle
+  private int gamesWon; // overall games
+  private int boxesOwned; // mainly used for dots and boxes
 
   /**
    * Constructor for Player
@@ -42,7 +47,7 @@ public class Player {
   }
 
   /**
-   * Get the number of moves made by the player
+   * Get the number of moves made by the players
    * 
    * @return number of moves
    */
@@ -50,18 +55,31 @@ public class Player {
     return moves;
   }
 
+  /**
+   * increments the number of boxes that this user owns by 1
+   */
   public void incrementNumberOfBoxesOwned() {
     boxesOwned++;
   }
 
-  public void setNumberOfBoxesOwner(int count) {
+  /**
+   * @param count new number of boxxes owned by this player
+   */
+  public void setNumberOfBoxesOwned(int count) {
     boxesOwned = count;
   }
 
+  /**
+   * resets the instance variable boxesOwned that represents the number of boxes a
+   * user completed in a dots and boxes game
+   */
   public void resetNumberOfBoxesOwned() {
     boxesOwned = 0;
   }
 
+  /**
+   * @return number of boxes that a user completed in dots and boxes
+   */
   public int getNumberOfBoxesOwned() {
     return boxesOwned;
   }
