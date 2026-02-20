@@ -3,6 +3,10 @@ package Games.DotsAndBoxes;
 import Games.Core.Tile;
 import Games.Enums.DotsAndBoxesOwnership;
 
+/**
+ * This is a tile specific to the dots and boxes game. It has 4 edges associated
+ * with it and is indexed by its topLeftCornerValue
+ */
 public class DotsAndBoxesTile implements Tile {
   private DotsAndBoxesOwnership owner;
   private int[] vertices; // list of corners in square starting top left and going clockwise
@@ -10,9 +14,9 @@ public class DotsAndBoxesTile implements Tile {
   private int[] verticesOffsets = { 0, 10, 11, 1 }; // can use single numbers since max board is 9x9
 
   /**
-   * @param topLeftCornerValue is the location of the top left corner vertex
+   * @param topLeftCornerValue is the location of the top left vertex
    * @param edges              is a list of the references to the edges for the
-   *                           tile
+   *                           tile (will be length 4)
    */
   public DotsAndBoxesTile(int topLeftCornerValue, DotsAndBoxesEdge[] edges) {
     owner = DotsAndBoxesOwnership.NOBODY;
@@ -23,6 +27,9 @@ public class DotsAndBoxesTile implements Tile {
     }
   }
 
+  /**
+   * @return owner of the tile using enum
+   */
   public DotsAndBoxesOwnership getTileOwner() {
     return owner;
   }
@@ -54,6 +61,9 @@ public class DotsAndBoxesTile implements Tile {
     return true;
   }
 
+  /**
+   * @return String value used to fill center of tile based on player number
+   */
   public String toString() {
     switch (owner) {
       case PLAYER1:

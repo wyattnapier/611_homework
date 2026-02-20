@@ -5,6 +5,11 @@ import Games.Core.*;
 import Games.Enums.DotsAndBoxesOwnership;
 import Games.Enums.MoveOutcomeEnum;
 
+/**
+ * This class controls the high level game logic of the Dots and Boxes game. It
+ * controls taking turns and checks for a win or early exit (quit). Uses the
+ * superclass method to setup game
+ */
 public class DotsAndBoxesGame extends Game {
   private int MIN_DIMENSION = 1;
   private int MAX_DIMENSION = 9;
@@ -21,11 +26,18 @@ public class DotsAndBoxesGame extends Game {
     rand = new Random(); // used to randomly choose first player
   }
 
+  /**
+   * controls main game loop and creation and handles game outcome
+   * 
+   * @param rows is number of rows for the board
+   * @param cols is number of cols for the board
+   */
   public void playSingleGame(int rows, int cols) {
     board = new DotsAndBoxesBoard(rows, cols);
     Boolean randomPlayerBool = rand.nextBoolean();
     currentPlayer = randomPlayerBool ? player1 : player2;
 
+    // main game loop
     MoveOutcomeEnum gameResult = MoveOutcomeEnum.CONTINUE_PLAYING;
     while (gameResult == MoveOutcomeEnum.CONTINUE_PLAYING) {
       currentPlayer = (currentPlayer.equals(player1)) ? player2 : player1; // swap current player
@@ -52,6 +64,15 @@ public class DotsAndBoxesGame extends Game {
     }
   }
 
+  /**
+   * prompts a user to input their move and marks the edge if it is valid. Also
+   * handles the w and q commands to default to winning or quitting. If user
+   * completes a tile with their move, they'll get another move and this method
+   * will recursively call itself in order to fulfill that requirement
+   * 
+   * @return an enum that represents the game being won, quit, or to continue
+   *         playing
+   */
   public MoveOutcomeEnum playSingleMove() {
     int numCompletedTiles = board.getNumberOfCompletedTiles();
     printGameStatus();
@@ -84,7 +105,7 @@ public class DotsAndBoxesGame extends Game {
       System.out.println("within single move the game is done");
       return MoveOutcomeEnum.WIN;
     } else if (board.getNumberOfCompletedTiles() > numCompletedTiles) {
-      return playSingleMove(); // recursively call it to see future outcome
+      return playSingleMove(); // recursively call function so you get another turn if you complete a tile
     } else {
       return MoveOutcomeEnum.CONTINUE_PLAYING;
     }
@@ -121,11 +142,17 @@ public class DotsAndBoxesGame extends Game {
     }
   }
 
+  /**
+   * prints game status -- first leaderboard then the board
+   */
   private void printGameStatus() {
     printScoreboard();
     System.out.println(board);
   }
 
+  /**
+   * prints the scoreboard
+   */
   private void printScoreboard() {
     String reset = DotsAndBoxesOwnership.getReset();
     String p1Color = DotsAndBoxesOwnership.PLAYER1.getColor();
@@ -139,10 +166,18 @@ public class DotsAndBoxesGame extends Game {
     System.out.println("============================");
   }
 
+  /**
+   * returns min dimension that the game board can be (see superclass for more
+   * description)
+   */
   public int getMinDimension() {
     return MIN_DIMENSION;
   }
 
+  /**
+   * returns max dimension that the game board can be (see superclass for more
+   * description)
+   */
   public int getMaxDimension() {
     return MAX_DIMENSION;
   }

@@ -65,7 +65,10 @@ public class DotsAndBoxesBoard extends Board {
   }
 
   /**
+   * checks if edge is valid (points within bounds and adjacent) given endpoints
+   * 
    * @param points is an EndpointsEnum
+   * @return true if valid else false
    */
   public boolean isValidEdge(LineEndpoints points) {
     if (points == null || !isWithinBounds(points))
@@ -75,11 +78,24 @@ public class DotsAndBoxesBoard extends Board {
     return isHorizontallyAdjacent || isVerticallyAdjacent;
   }
 
+  /**
+   * checks if edge is valid (points within bounds and adjacent) given edge
+   * 
+   * @param points is a DotsAndBoxesEdge
+   * @return true if valid else false
+   */
   public boolean isValidEdge(DotsAndBoxesEdge edge) {
     LineEndpoints pointPair = edge.getEdgeEndpoints();
     return isValidEdge(pointPair);
   }
 
+  /**
+   * implements abstract superclass method
+   * if both points are within bounds then the line/end is in bounds
+   * 
+   * @param points is a LineEndpoints object consistent of two endpoints of a line
+   * @return true if within bounds else false
+   */
   public boolean isWithinBounds(LineEndpoints points) {
     return isPointWithinBounds(points.p1) && isPointWithinBounds(points.p2);
   }
@@ -89,11 +105,18 @@ public class DotsAndBoxesBoard extends Board {
    * 
    * @param p1 is an int representation of a point e.g. rc
    * @param p2 is an int representation of a point e.g. rc
+   * @return true if within bounds else false
    */
   public boolean isWithinBounds(int p1, int p2) {
     return isPointWithinBounds(p1) && isPointWithinBounds(p2);
   }
 
+  /**
+   * checks if point is within bounds of the board
+   * 
+   * @param p point calculated from (row*10+col)
+   * @return true if within bounds else false
+   */
   public boolean isPointWithinBounds(int p) {
     int r = p / 10;
     int c = p % 10;
@@ -101,9 +124,11 @@ public class DotsAndBoxesBoard extends Board {
   }
 
   /**
+   * marks an edge as owned by the current player and increments the number of
+   * completed tiles on the board if this closes tile(s).
    * 
-   * @param points
-   * @param currentPlayer
+   * @param points        endpoints of the edge that will be marked
+   * @param currentPlayer player who's turn it is
    * @return true if successfully marks and false otherwise
    */
   public boolean markEdge(LineEndpoints points, DotsAndBoxesOwnership currentPlayer) {
@@ -143,6 +168,8 @@ public class DotsAndBoxesBoard extends Board {
    * function for testing the final win state of the board without having to play
    * the game
    * NOTE: does not properly give a player another turn if they complete a tile
+   * because it is just a simulation of getting to solved state in a
+   * semi-realistic way
    */
   public void setBoardToSolvedState() {
     List<LineEndpoints> allEdges = new ArrayList<>(endpointsToEdge.keySet());
@@ -159,6 +186,12 @@ public class DotsAndBoxesBoard extends Board {
     }
   }
 
+  /**
+   * returns number of boxes owned by input user
+   * 
+   * @param owner Player1 or Player2 or Nobody
+   * @return number of boxes owned by the input owner
+   */
   public int countNumberOfBoxesOwnedByUser(DotsAndBoxesOwnership owner) {
     int count = 0;
     for (int r = 0; r < board_rows; r++) {
@@ -169,14 +202,25 @@ public class DotsAndBoxesBoard extends Board {
     return count;
   }
 
+  /**
+   * increment number of completed tiles in board
+   */
   public void incrementNumberOfCompletedTiles() {
     numCompletedTiles++;
   }
 
+  /**
+   * @return integer number of completed tiles in board
+   */
   public int getNumberOfCompletedTiles() {
     return numCompletedTiles;
   }
 
+  /**
+   * converts board to string and uses colors for clarity
+   * 
+   * @return String representation of board
+   */
   public String toString() {
     StringBuilder sb = new StringBuilder();
     // column header
@@ -197,9 +241,7 @@ public class DotsAndBoxesBoard extends Board {
           DotsAndBoxesEdge edge = endpointsToEdge.get(new LineEndpoints(p1, p2));
 
           if (edge != null && edge.edgeHasOwner()) {
-            // COLOR THE HORIZONTAL EDGE
-            String color = edge.getEdgeOwner().getColor();
-            sb.append(color + "──" + DotsAndBoxesOwnership.getReset());
+            sb.append(edge.toString());
           } else {
             sb.append("  ");
           }
@@ -215,14 +257,11 @@ public class DotsAndBoxesBoard extends Board {
           int p1 = r * 10 + c;
           int p2 = p1 + 10;
           DotsAndBoxesEdge vEdge = endpointsToEdge.get(new LineEndpoints(p1, p2));
-
           if (vEdge != null && vEdge.edgeHasOwner()) {
-            String color = vEdge.getEdgeOwner().getColor();
-            sb.append(color + "│" + DotsAndBoxesOwnership.getReset());
+            sb.append(vEdge.toString());
           } else {
             sb.append(" ");
           }
-
           // handle tile center
           if (c < board_cols) {
             DotsAndBoxesTile tile = tiles[r][c];
