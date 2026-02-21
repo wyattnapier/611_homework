@@ -21,7 +21,7 @@ public abstract class Game {
   /**
    * plays a single move of the specific game type
    * 
-   * @return 1 to continue playing, 0 to indicate a win, -1 to quit
+   * @return enum value (WIN, QUIT, CONTINUE_PLAYING)
    */
   public abstract MoveOutcomeEnum playSingleMove();
 
