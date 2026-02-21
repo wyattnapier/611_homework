@@ -48,7 +48,7 @@ I chose to use a map of line endpoints to edges and edges to tiles because this 
 
 Also, to simplify interacting with edges I created the lineEndpoints class and use a single int for each coordinate (calculated by `row \* 10 + column`) because it reduces the number of variables that are passed around. When really needed, each int point can still be decomposed into row and column components.
 
-If I had more time I would move more of my printing outputs to the new Output file.
+If I had more time I would move more of my printing outputs to the new Output file. I would also extend the Input and Output classes for various games.
 
 ### Compilation and run directions for the terminal
 

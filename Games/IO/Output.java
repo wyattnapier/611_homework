@@ -16,7 +16,24 @@ public class Output {
   }
 
   /**
+   * game description
+   */
+  public void printDotsAndBoxesDescription() {
+    System.out.println(
+        "Dots and Boxes is a strategic pen-and-paper game where two players take turns drawing lines between dots on a grid to complete squares and claim them as their own.");
+  }
+
+  /**
+   * game description
+   */
+  public void printSlidingPuzzleDescription() {
+    System.out.println(
+        "The sliding puzzle is a single-player game where the objective is to arrange a set of numbered square tiles in ascending order by sliding them one at a time into a single empty space within a framed grid.");
+  }
+
+  /**
    * prints final message including player stats
+   * 
    * @param p1 player 1
    * @param p2 player 2
    */

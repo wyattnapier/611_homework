@@ -106,6 +106,6 @@ All other classes are standalone and don't have any inheritance as of now.
 
 My design is well suited for scalability and extendibility because this game isn't strictly the basic 3x3 version. Instead, each dimension can range from 2 to 9 because this prohibits a user from creating a 1x1 puzzle which would only have the empty tile, and it also ensures that all tile values will be at most 2 digits to maintain formatting. This is enforced by prompting a user to enter a new value if their's doesn't conform to the constraints.
 
-Additionally, you cann see that by creating classes Board and for Tile, I can then extend them for different specific games or tile types as you can see with the empty tile. This will provide a good foundations for my future assignments to build on if we are to build a relatively similar turn-based board games, especially because my implementation has a player and loops over 1 move at a time.
+Additionally, you can see that by creating classes Board and for Tile, I can then extend them for different specific games or tile types as you can see with the empty tile. This will provide a good foundations for my future assignments to build on if we are to build a relatively similar turn-based board games, especially because my implementation has a player and loops over 1 move at a time.
 
 I also ensured that it is correct by verifying user inputs and when creating the shuffled board, starting from a completed state and executing random moves until reaching a shuffled state.

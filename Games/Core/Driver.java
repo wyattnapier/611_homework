@@ -52,6 +52,7 @@ public class Driver {
             currentPlayer = input.getSlidingPuzzleCurrentPlayer(player1.getPlayerName(), player2.getPlayerName()) == 1
                 ? player1
                 : player2;
+          output.printSlidingPuzzleDescription();
           game = new SlidingPuzzleGame(currentPlayer, input);
           break;
         case "d":
@@ -67,6 +68,7 @@ public class Driver {
             }
             player2 = new Player(player2NameInput);
           }
+          output.printDotsAndBoxesDescription();
           game = new DotsAndBoxesGame(player1, player2, input);
           break;
         case "q":
