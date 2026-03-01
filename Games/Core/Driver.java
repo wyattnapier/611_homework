@@ -34,6 +34,7 @@ public class Driver {
     Map<String, String> gameOptions = new HashMap<String, String>();
     gameOptions.put("s", "sliding puzzle");
     gameOptions.put("d", "dots and boxes");
+    gameOptions.put("q", "quoridor");
 
     Boolean continuePlaying = true;
     Boolean firstRun = true;
@@ -72,6 +73,12 @@ public class Driver {
           game = new DotsAndBoxesGame(player1, player2, input);
           break;
         case "q":
+          System.out.println("Quoridor hasn't been implemented yet, please try again later.");
+          // TODO: make sure we have 2 quoridor players
+          // TODO: create a corridor game (the setup and play multiple games method will
+          // be called in an if statement after)
+          break;
+        case "quit":
           output.printFinalEndMessage(player1, player2);
           continuePlaying = false;
           break;
@@ -83,7 +90,7 @@ public class Driver {
         game.setupAndPlayMultipleGames();
       // add option to quit after playing first game
       if (firstRun) {
-        gameOptions.put("q", "quitting all games");
+        gameOptions.put("quit", "quitting all games");
         firstRun = false;
       }
     } while (continuePlaying);
