@@ -1,7 +1,6 @@
 package Games.Quoridor;
 
 import Games.Core.Game;
-import Games.Core.Player;
 import Games.Enums.MoveOutcomeEnum;
 
 public class QuoridorGame extends Game {
@@ -48,6 +47,20 @@ public class QuoridorGame extends Game {
 
   public MoveOutcomeEnum playSingleMove() {
     // TODO: implement single move for quoridor game
-    return MoveOutcomeEnum.CONTINUE_PLAYING;
+    String moveInput = input
+        .getStringInput(currentPlayer.getPlayerName()
+            + ", enter 'q' to quit, 'w' to mark a wall of length 2, or 'm' to move your character to a square (use the top left corner's coordinates): ");
+    System.out.println();
+
+    if (moveInput.toLowerCase() == "q") {
+      return MoveOutcomeEnum.QUIT;
+    } else if (moveInput.toLowerCase() == "win") {
+      board.setBoardToSolvedState();
+      System.out.println(board);
+      return MoveOutcomeEnum.WIN;
+    } else {
+      // TODO: actually implemnt marking the wall or moving the character
+      return board.isSolved() ? MoveOutcomeEnum.WIN : MoveOutcomeEnum.CONTINUE_PLAYING;
+    }
   }
 }

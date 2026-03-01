@@ -3,6 +3,8 @@ package Games.Core;
 import java.util.*;
 
 import Games.IO.*;
+import Games.Quoridor.QuoridorGame;
+import Games.Quoridor.QuoridorPlayer;
 import Games.SlidingPuzzle.SlidingPuzzleGame;
 import Games.DotsAndBoxes.DotsAndBoxesGame;
 
@@ -73,10 +75,24 @@ public class Driver {
           game = new DotsAndBoxesGame(player1, player2, input);
           break;
         case "q":
-          System.out.println("Quoridor hasn't been implemented yet, please try again later.");
-          // TODO: make sure we have 2 quoridor players
-          // TODO: create a corridor game (the setup and play multiple games method will
-          // be called in an if statement after)
+          if (player2 == null) {
+            String player2NameInput;
+            while (true) {
+              player2NameInput = input.getUsername("Player 2");
+              if (player2NameInput.equals(player1.getPlayerName())) {
+                System.out.println("Invalid input. Player 2 cannot have same name as Player 1");
+              } else {
+                break;
+              }
+            }
+            player2 = new Player(player2NameInput);
+          }
+          // TODO: this initialization of quoridor players feels incorrect, but based on
+          // the other games we should be able to share player objects between
+          // games in some way
+          QuoridorPlayer qPlayer1 = new QuoridorPlayer(player1.getPlayerName(), 0, 0, 0, 0);
+          QuoridorPlayer qPlayer2 = new QuoridorPlayer(player2.getPlayerName(), 0, 0, 0, 0);
+          game = new QuoridorGame(qPlayer1, qPlayer2, input);
           break;
         case "quit":
           output.printFinalEndMessage(player1, player2);
