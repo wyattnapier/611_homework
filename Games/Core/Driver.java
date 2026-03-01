@@ -92,6 +92,7 @@ public class Driver {
           // games in some way
           QuoridorPlayer qPlayer1 = new QuoridorPlayer(player1.getPlayerName(), 0, 0, 0, 0);
           QuoridorPlayer qPlayer2 = new QuoridorPlayer(player2.getPlayerName(), 0, 0, 0, 0);
+          output.printQuoridorDescription();
           game = new QuoridorGame(qPlayer1, qPlayer2, input);
           break;
         case "quit":

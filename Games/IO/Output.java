@@ -31,6 +31,11 @@ public class Output {
         "The sliding puzzle is a single-player game where the objective is to arrange a set of numbered square tiles in ascending order by sliding them one at a time into a single empty space within a framed grid.");
   }
 
+  public void printQuoridorDescription() {
+    System.out.println(
+        "Quorridor is a two player game where your objective is to cross the board. \nYou can place walls on the map to slow your opponent down -- first to the other side wins!");
+  }
+
   /**
    * prints final message including player stats
    * 
