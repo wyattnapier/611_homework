@@ -13,9 +13,6 @@ import Games.IO.Input;
 public class SlidingPuzzleGame extends Game {
   private Player player;
   private SlidingPuzzleBoard board;
-  private final int MIN_DIMENSION = 2;
-  private final int MAX_DIMENSION = 9; // reasonable upper limit to avoid huge
-  // boards
 
   /**
    * constructor for Game
@@ -25,6 +22,8 @@ public class SlidingPuzzleGame extends Game {
   public SlidingPuzzleGame(Player player, Input input) {
     this.player = player;
     this.input = input;
+    this.MIN_DIMENSION = 2;
+    this.MAX_DIMENSION = 9;
   }
 
   /**
@@ -85,13 +84,5 @@ public class SlidingPuzzleGame extends Game {
           return MoveOutcomeEnum.CONTINUE_PLAYING;
         }
     }
-  }
-
-  public int getMinDimension() {
-    return MIN_DIMENSION;
-  }
-
-  public int getMaxDimension() {
-    return MAX_DIMENSION;
   }
 }

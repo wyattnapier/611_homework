@@ -11,8 +11,6 @@ import Games.Enums.MoveOutcomeEnum;
  * superclass method to setup game
  */
 public class DotsAndBoxesGame extends Game {
-  private int MIN_DIMENSION = 1;
-  private int MAX_DIMENSION = 9;
   private Player player1, player2, currentPlayer;
   private DotsAndBoxesBoard board;
   private Random rand;
@@ -24,6 +22,8 @@ public class DotsAndBoxesGame extends Game {
     player1.resetNumberOfBoxesOwned();
     player2.resetNumberOfBoxesOwned();
     rand = new Random(); // used to randomly choose first player
+    this.MIN_DIMENSION = 1;
+    this.MAX_DIMENSION = 9;
   }
 
   /**
@@ -164,21 +164,5 @@ public class DotsAndBoxesGame extends Game {
     System.out.println(String.format("  %s%s%s: %d boxes",
         p2Color, player2.getPlayerName(), reset, player2.getNumberOfBoxesOwned()));
     System.out.println("============================");
-  }
-
-  /**
-   * returns min dimension that the game board can be (see superclass for more
-   * description)
-   */
-  public int getMinDimension() {
-    return MIN_DIMENSION;
-  }
-
-  /**
-   * returns max dimension that the game board can be (see superclass for more
-   * description)
-   */
-  public int getMaxDimension() {
-    return MAX_DIMENSION;
   }
 }

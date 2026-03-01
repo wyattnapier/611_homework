@@ -9,6 +9,8 @@ import Games.IO.Input;
  */
 public abstract class Game {
   protected Input input;
+  protected int MIN_DIMENSION;
+  protected int MAX_DIMENSION;
 
   /**
    * plays a single game of the specific game type
@@ -54,7 +56,9 @@ public abstract class Game {
    * 
    * @return minimum board dimension (e.g. 1 for dots and boxes)
    */
-  abstract public int getMinDimension();
+  public int getMinDimension() {
+    return MIN_DIMENSION;
+  }
 
   /**
    * since boards are square, the dimension limits are the same for rows and
@@ -63,5 +67,7 @@ public abstract class Game {
    * 
    * @return max board dimension (e.g. 9 for dots and boxes)
    */
-  abstract public int getMaxDimension();
+  public int getMaxDimension() {
+    return MAX_DIMENSION;
+  }
 }
