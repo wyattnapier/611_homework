@@ -55,11 +55,7 @@ public class QuoridorBoard extends Board {
       return false;
 
     // can't move onto opponent
-    QuoridorPlayer other;
-    if (mover == p1)
-      other = p2;
-    else
-      other = p1;
+    QuoridorPlayer other = (mover == p1) ? p2 : p1;
     if (nr == other.getRow() && nc == other.getCol())
       return false;
 
@@ -76,6 +72,8 @@ public class QuoridorBoard extends Board {
   }
 
   // toString
+  // TODO: adapt the toString method from the dots and boxes board since it has
+  // coordinates and colors already
   public String toString() {
     StringBuilder sb = new StringBuilder();
 

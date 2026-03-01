@@ -23,7 +23,7 @@ public class QuoridorGame extends Game {
    */
   public void playSingleGame(int rows, int cols) {
     assert rows == 9 && cols == 9 : "invalid dimensions: quoridor board must be 9x9";
-    board = new QuoridorBoard(rows, cols, player1, currentPlayer);
+    board = new QuoridorBoard(rows, cols, player1, player2);
     currentPlayer = player1; // can make random in the future like in dots and boxes game if we want
 
     // main game loop
@@ -46,7 +46,6 @@ public class QuoridorGame extends Game {
   }
 
   public MoveOutcomeEnum playSingleMove() {
-    // TODO: implement single move for quoridor game
     String moveInput = input
         .getStringInput(currentPlayer.getPlayerName()
             + ", enter 'q' to quit, 'w' to mark a wall of length 2, or 'm' to move your character to a square (use the top left corner's coordinates): ");
@@ -59,7 +58,7 @@ public class QuoridorGame extends Game {
       System.out.println(board);
       return MoveOutcomeEnum.WIN;
     } else {
-      // TODO: actually implemnt marking the wall or moving the character
+      // TODO: actually implement marking the wall or moving the character
       return board.isSolved() ? MoveOutcomeEnum.WIN : MoveOutcomeEnum.CONTINUE_PLAYING;
     }
   }
