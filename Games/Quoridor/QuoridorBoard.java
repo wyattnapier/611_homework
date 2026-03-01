@@ -7,8 +7,8 @@ import Games.Core.Board;
 
 public class QuoridorBoard extends Board {
   // set size of board and walls per player as constants
-  public static final int DEFAULT_SIZE = 9;
-  public static final int INITIAL_WALLS_PER_PLAYER = 10;
+  public final int DEFAULT_SIZE = 9;
+  public final int INITIAL_WALLS_PER_PLAYER = 10;
 
   // board of tiles and players
   private final QuoridorTile[][] tiles;
