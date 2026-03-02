@@ -39,6 +39,10 @@ public class QuoridorPlayer extends Player {
     return wallsRemaining;
   }
 
+  public void setWallsRemaining(int newWallsRemaining) {
+    wallsRemaining = newWallsRemaining;
+  }
+
   public boolean useWall() {
     if (wallsRemaining <= 0)
       return false;

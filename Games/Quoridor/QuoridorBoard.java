@@ -34,6 +34,7 @@ public class QuoridorBoard extends Board {
     }
     this.player1 = player1;
     this.player2 = player2;
+    resetPlayersToStart();
 
     // populate the map of endpoints to edges
     for (int r = 0; r <= rows; r++) {
@@ -117,6 +118,19 @@ public class QuoridorBoard extends Board {
   // just for testing when we force a win with "w"
   public void setBoardToSolvedState() {
     player1.setPosition(player1.getGoalRow(), player1.getCol());
+  }
+
+  /**
+   * resets the number of remaining walls for each player and put them back in
+   * their starting position
+   * // TODO: should this be in the QuoridorPlayer class instead?
+   */
+  public void resetPlayersToStart() {
+    int startCol = board_cols / 2; // takes the floor to give correct index
+    player1.setPosition(board_rows - player1.getGoalRow(), startCol);
+    player2.setPosition(board_rows - player1.getGoalRow(), startCol);
+    player1.setWallsRemaining(INITIAL_WALLS_PER_PLAYER);
+    player2.setWallsRemaining(INITIAL_WALLS_PER_PLAYER);
   }
 
   /**
