@@ -2,6 +2,7 @@ package Games.DotsAndBoxes;
 
 import java.util.*;
 import Games.Core.Board;
+import Games.Core.CoordPoint;
 import Games.Core.LineEndpoints;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
 
@@ -22,41 +23,47 @@ public class DotsAndBoxesBoard extends Board {
   public DotsAndBoxesBoard(int rows, int cols) {
     super(rows, cols);
     numCompletedTiles = 0;
-    int[] edgeOffsets = { 1, 10 };
+
     // populate the map of endpoints to edges
     for (int r = 0; r <= rows; r++) {
       for (int c = 0; c <= cols; c++) {
-        for (int offset : edgeOffsets) {
-          int p1 = r * 10 + c;
-          int p2 = p1 + offset;
-          LineEndpoints pointPair = new LineEndpoints(p1, p2);
-          if (isValidEdge(pointPair)) {
-            DotsAndBoxesEdge edge = new DotsAndBoxesEdge(pointPair);
-            endpointsToEdge.put(pointPair, edge);
-            LineEndpoints swappedPointPair = new LineEndpoints(p2, p1);
-            endpointsToEdge.put(swappedPointPair, edge);
+        CoordPoint curr = new CoordPoint(r, c);
+        CoordPoint horizNeighbor = new CoordPoint(r, c + 1);
+        CoordPoint vertNeighbor = new CoordPoint(r + 1, c);
+        LineEndpoints horizPair = new LineEndpoints(curr, horizNeighbor);
+        LineEndpoints vertPair = new LineEndpoints(curr, vertNeighbor);
+
+        for (LineEndpoints pair : new LineEndpoints[] { horizPair, vertPair }) {
+          if (isValidEdge(pair)) {
+            DotsAndBoxesEdge edge = new DotsAndBoxesEdge(pair);
+            endpointsToEdge.put(pair, edge);
+            // don't need to add swapped order pair because of the xor in the hash for endpoints
           }
         }
       }
     }
-    // loop through all top left corners of boxes and create tiles to populate map
-    // of edge to tile and the tile array
+
+    // loop through all top left corners of boxes and create tiles
     tiles = new DotsAndBoxesTile[board_rows][board_cols];
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
-        int topLeftVertex = r * 10 + c;
+        // 4 corners of this tile: topLeft, topRight, bottomLeft, bottomRight
+        CoordPoint topLeft = new CoordPoint(r, c);
+        CoordPoint topRight = new CoordPoint(r, c + 1);
+        CoordPoint bottomLeft = new CoordPoint(r + 1, c);
+        CoordPoint bottomRight = new CoordPoint(r + 1, c + 1);
+        CoordPoint[] corners = { topLeft, topRight, bottomRight, bottomLeft };
         DotsAndBoxesEdge[] tileEdges = new DotsAndBoxesEdge[4];
-        for (int offsetIndex = 0; offsetIndex < verticesOffsets.length; offsetIndex++) {
-          int p1 = topLeftVertex + verticesOffsets[offsetIndex];
-          int p2 = topLeftVertex + verticesOffsets[(offsetIndex + 1) % verticesOffsets.length];
-          LineEndpoints selectedEdgeEndpoints = new LineEndpoints(p1, p2);
-          DotsAndBoxesEdge selectedEdge = endpointsToEdge.get(selectedEdgeEndpoints);
-          tileEdges[offsetIndex] = selectedEdge;
+
+        for (int i = 0; i < corners.length; i++) {
+          CoordPoint a = corners[i];
+          CoordPoint b = corners[(i + 1) % corners.length];
+          tileEdges[i] = endpointsToEdge.get(new LineEndpoints(a, b));
         }
-        DotsAndBoxesTile tile = new DotsAndBoxesTile(topLeftVertex, tileEdges);
+        DotsAndBoxesTile tile = new DotsAndBoxesTile(topLeft, tileEdges);
         tiles[r][c] = tile;
         for (DotsAndBoxesEdge edge : tileEdges) {
-          edgeToTiles.computeIfAbsent(edge, k -> new ArrayList<>()).add(tile); // makes a list if one doesn't exist
+          edgeToTiles.computeIfAbsent(edge, k -> new ArrayList<>()).add(tile);
         }
       }
     }
@@ -71,9 +78,7 @@ public class DotsAndBoxesBoard extends Board {
   public boolean isValidEdge(LineEndpoints points) {
     if (points == null || !isWithinBounds(points))
       return false;
-    boolean isHorizontallyAdjacent = Math.abs(points.p1 - points.p2) == 1;
-    boolean isVerticallyAdjacent = Math.abs(points.p1 - points.p2) == 10;
-    return isHorizontallyAdjacent || isVerticallyAdjacent;
+    return points.areEndpointsAdjacent();
   }
 
   /**
@@ -105,7 +110,7 @@ public class DotsAndBoxesBoard extends Board {
    * @param p2 is an int representation of a point e.g. rc
    * @return true if within bounds else false
    */
-  public boolean isWithinBounds(int p1, int p2) {
+  public boolean isWithinBounds(CoordPoint p1, CoordPoint p2) {
     return isPointWithinBounds(p1) && isPointWithinBounds(p2);
   }
 
@@ -115,10 +120,8 @@ public class DotsAndBoxesBoard extends Board {
    * @param p point calculated from (row*10+col)
    * @return true if within bounds else false
    */
-  public boolean isPointWithinBounds(int p) {
-    int r = p / 10;
-    int c = p % 10;
-    return (0 <= r && r <= board_rows) && (0 <= c && c <= board_cols);
+  public boolean isPointWithinBounds(CoordPoint p) {
+    return (0 <= p.getRow() && p.getRow() <= board_rows) && (0 <= p.getCol() && p.getCol() <= board_cols);
   }
 
   /**
@@ -234,8 +237,8 @@ public class DotsAndBoxesBoard extends Board {
       for (int c = 0; c <= board_cols; c++) {
         sb.append("•");
         if (c < board_cols) {
-          int p1 = r * 10 + c;
-          int p2 = p1 + 1;
+          CoordPoint p1 = new CoordPoint(r, c);
+          CoordPoint p2 = new CoordPoint(r, c + 1);
           DotsAndBoxesEdge edge = endpointsToEdge.get(new LineEndpoints(p1, p2));
 
           if (edge != null && edge.edgeHasOwner()) {
@@ -252,8 +255,8 @@ public class DotsAndBoxesBoard extends Board {
         sb.append("     ");
         for (int c = 0; c <= board_cols; c++) {
           // Handle Vertical Edge
-          int p1 = r * 10 + c;
-          int p2 = p1 + 10;
+          CoordPoint p1 = new CoordPoint(r, c);
+          CoordPoint p2 = new CoordPoint(r + 1, c);
           DotsAndBoxesEdge vEdge = endpointsToEdge.get(new LineEndpoints(p1, p2));
           if (vEdge != null && vEdge.edgeHasOwner()) {
             sb.append(vEdge.toString());

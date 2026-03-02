@@ -19,7 +19,6 @@ public abstract class Edge {
    * @return string
    */
   public String toString() {
-    String line = Math.abs(edgeEndpoints.p1 - edgeEndpoints.p2) == 10 ? "|" : "──";
-    return line;
+    return (edgeEndpoints.p1.getCol() == edgeEndpoints.p2.getCol()) ? "|" : "──";
   }
 }

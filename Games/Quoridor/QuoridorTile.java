@@ -1,14 +1,15 @@
 package Games.Quoridor;
 
 import Games.Core.Tile;
+import Games.Core.CoordPoint;
 
 public class QuoridorTile implements Tile {
   private int row, col;
   private QuoridorEdge[] edges; // order edge list as up, right, left, right
 
-  QuoridorTile(int rc, QuoridorEdge[] tileEdges) {
-    this.row = rc / 10;
-    this.col = rc % 10;
+  QuoridorTile(CoordPoint topLeft, QuoridorEdge[] tileEdges) {
+    this.row = topLeft.getRow();
+    this.col = topLeft.getCol();
     edges = tileEdges;
   }
 

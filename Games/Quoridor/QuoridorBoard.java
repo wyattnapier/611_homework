@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import Games.Core.Board;
+import Games.Core.CoordPoint;
 import Games.Core.LineEndpoints;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
 
@@ -34,19 +35,21 @@ public class QuoridorBoard extends Board {
     this.player1 = player1;
     this.player2 = player2;
 
-    int[] edgeOffsets = { 1, 10 };
     // populate the map of endpoints to edges
     for (int r = 0; r <= rows; r++) {
       for (int c = 0; c <= cols; c++) {
-        for (int offset : edgeOffsets) {
-          int p1 = r * 10 + c;
-          int p2 = p1 + offset;
-          LineEndpoints pointPair = new LineEndpoints(p1, p2);
-          if (isValidEdge(pointPair)) {
-            QuoridorEdge edge = new QuoridorEdge(pointPair);
-            endpointsToEdge.put(pointPair, edge);
-            LineEndpoints swappedPointPair = new LineEndpoints(p2, p1);
-            endpointsToEdge.put(swappedPointPair, edge);
+        CoordPoint curr = new CoordPoint(r, c);
+        CoordPoint horizNeighbor = new CoordPoint(r, c + 1);
+        CoordPoint vertNeighbor = new CoordPoint(r + 1, c);
+        LineEndpoints horizPair = new LineEndpoints(curr, horizNeighbor);
+        LineEndpoints vertPair = new LineEndpoints(curr, vertNeighbor);
+
+        for (LineEndpoints pair : new LineEndpoints[] { horizPair, vertPair }) {
+          if (isValidEdge(pair)) {
+            QuoridorEdge edge = new QuoridorEdge(pair);
+            endpointsToEdge.put(pair, edge);
+            // don't need to add swapped order pair because of the xor in the hash for
+            // endpoints
           }
         }
       }
@@ -56,16 +59,20 @@ public class QuoridorBoard extends Board {
     tiles = new QuoridorTile[board_rows][board_cols];
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
-        int topLeftVertex = r * 10 + c;
+        // 4 corners of this tile: topLeft, topRight, bottomLeft, bottomRight
+        CoordPoint topLeft = new CoordPoint(r, c);
+        CoordPoint topRight = new CoordPoint(r, c + 1);
+        CoordPoint bottomLeft = new CoordPoint(r + 1, c);
+        CoordPoint bottomRight = new CoordPoint(r + 1, c + 1);
+        CoordPoint[] corners = { topLeft, topRight, bottomRight, bottomLeft };
         QuoridorEdge[] tileEdges = new QuoridorEdge[4];
-        for (int offsetIndex = 0; offsetIndex < verticesOffsets.length; offsetIndex++) {
-          int p1 = topLeftVertex + verticesOffsets[offsetIndex];
-          int p2 = topLeftVertex + verticesOffsets[(offsetIndex + 1) % verticesOffsets.length];
-          LineEndpoints selectedEdgeEndpoints = new LineEndpoints(p1, p2);
-          QuoridorEdge selectedEdge = endpointsToEdge.get(selectedEdgeEndpoints);
-          tileEdges[offsetIndex] = selectedEdge;
+
+        for (int i = 0; i < corners.length; i++) {
+          CoordPoint a = corners[i];
+          CoordPoint b = corners[(i + 1) % corners.length];
+          tileEdges[i] = endpointsToEdge.get(new LineEndpoints(a, b));
         }
-        QuoridorTile tile = new QuoridorTile(topLeftVertex, tileEdges);
+        QuoridorTile tile = new QuoridorTile(topLeft, tileEdges);
         tiles[r][c] = tile;
         for (QuoridorEdge edge : tileEdges) {
           edgeToTiles.computeIfAbsent(edge, k -> new ArrayList<>()).add(tile); // makes a list if one doesn't exist
@@ -84,7 +91,7 @@ public class QuoridorBoard extends Board {
    * 
    * @return true if tile point is within the board dimensions
    */
-  public boolean isWithinBounds(int x, int y) {
+  public boolean isTileWithinBounds(int x, int y) {
     return (x >= 0) && (x < board_rows) && (y >= 0) && (y < board_cols);
   }
 
@@ -97,14 +104,14 @@ public class QuoridorBoard extends Board {
    *         valid edge
    */
   public boolean isValidEdge(LineEndpoints ends) {
-    boolean pointsAreAdjacent = (Math.abs(ends.p1 - ends.p2) == 1 || Math.abs(ends.p1 - ends.p2) == 10);
+    boolean pointsAreAdjacent = ends.areEndpointsAdjacent();
     return pointsAreAdjacent && isEdgePointWithinBounds(ends.p1) && isEdgePointWithinBounds(ends.p2);
   }
 
-  public boolean isEdgePointWithinBounds(int point) {
-    int x = point % 10;
-    int y = point / 10;
-    return (x >= 0) && (x <= board_rows) && (y >= 0) && (y <= board_cols);
+  public boolean isEdgePointWithinBounds(CoordPoint point) {
+    int r = point.getRow();
+    int c = point.getCol();
+    return (0 <= r) && (r <= board_rows) && (0 <= c) && (c <= board_cols);
   }
 
   // just for testing when we force a win with "w"
@@ -131,7 +138,7 @@ public class QuoridorBoard extends Board {
     int nr = mover.getRow() + dr;
     int nc = mover.getCol() + dc;
 
-    if (!isWithinBounds(nr, nc))
+    if (!isTileWithinBounds(nr, nc))
       return false;
 
     // can't move onto opponent
@@ -177,8 +184,8 @@ public class QuoridorBoard extends Board {
       for (int c = 0; c <= board_cols; c++) {
         sb.append("•");
         if (c < board_cols) {
-          int p1 = r * 10 + c;
-          int p2 = p1 + 1;
+          CoordPoint p1 = new CoordPoint(r, c);
+          CoordPoint p2 = new CoordPoint(r, c + 1);
           QuoridorEdge edge = endpointsToEdge.get(new LineEndpoints(p1, p2));
           sb.append(edge.toString()); // TODO: add some colors here if edge was marked
         }
@@ -190,8 +197,8 @@ public class QuoridorBoard extends Board {
         sb.append("     ");
         for (int c = 0; c <= board_cols; c++) {
           // Handle Vertical Edge
-          int p1 = r * 10 + c;
-          int p2 = p1 + 10;
+          CoordPoint p1 = new CoordPoint(r, c);
+          CoordPoint p2 = new CoordPoint(r + 1, c);
           QuoridorEdge vEdge = endpointsToEdge.get(new LineEndpoints(p1, p2));
           sb.append(vEdge.toString()); // TODO: add some colors here if edge was marked
           // handle tile center

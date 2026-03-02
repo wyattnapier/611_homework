@@ -1,5 +1,6 @@
 package Games.DotsAndBoxes;
 
+import Games.Core.CoordPoint;
 import Games.Core.Tile;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
 
@@ -9,21 +10,22 @@ import Games.Enums.DotsAndBoxesOwnershipEnum;
  */
 public class DotsAndBoxesTile implements Tile {
   private DotsAndBoxesOwnershipEnum owner;
-  private int[] vertices; // list of corners in square starting top left and going clockwise
+  private CoordPoint[] vertices; // list of corners in square starting top left and going clockwise
   private DotsAndBoxesEdge[] edges; // order edge list as up, right, left, right
-  private int[] verticesOffsets = { 0, 10, 11, 1 }; // can use single numbers since max board is 9x9
+  private CoordPoint[] coordPointOffsets = { new CoordPoint(0, 0), new CoordPoint(1, 0), new CoordPoint(1, 1),
+      new CoordPoint(0, 1) }; // can use single numbers since max board is 9x9
 
   /**
    * @param topLeftCornerValue is the location of the top left vertex
    * @param edges              is a list of the references to the edges for the
    *                           tile (will be length 4)
    */
-  public DotsAndBoxesTile(int topLeftCornerValue, DotsAndBoxesEdge[] edges) {
+  public DotsAndBoxesTile(CoordPoint topLeftCornerValue, DotsAndBoxesEdge[] edges) {
     owner = DotsAndBoxesOwnershipEnum.NOBODY;
-    vertices = new int[verticesOffsets.length];
+    vertices = new CoordPoint[coordPointOffsets.length];
     this.edges = edges;
-    for (int i = 0; i < verticesOffsets.length; i++) {
-      vertices[i] = topLeftCornerValue + verticesOffsets[i];
+    for (int i = 0; i < coordPointOffsets.length; i++) {
+      vertices[i] = topLeftCornerValue.plus(coordPointOffsets[i]);
     }
   }
 

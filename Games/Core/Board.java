@@ -33,15 +33,6 @@ public abstract class Board {
     public abstract boolean isSolved();
 
     /**
-     * Check if given coordinates are within board bounds
-     * 
-     * @param x the x index
-     * @param y the y index
-     * @return true if within bounds, false otherwise
-     */
-    public abstract boolean isWithinBounds(int x, int y);
-
-    /**
      * Set the board to the solved state for initialization or testing
      */
     public abstract void setBoardToSolvedState();

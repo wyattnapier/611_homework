@@ -1,6 +1,7 @@
 package Games.DotsAndBoxes;
 
 import Games.Core.LineEndpoints;
+import Games.Core.CoordPoint;
 import Games.Core.Edge;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
 
@@ -45,7 +46,7 @@ public class DotsAndBoxesEdge extends Edge {
    */
   @Override
   public String toString() {
-    String line = Math.abs(edgeEndpoints.p1 - edgeEndpoints.p2) == 10 ? "|" : "──";
+    String line = (edgeEndpoints.p1.getCol() == edgeEndpoints.p2.getCol()) ? "|" : "──";
     String output = edgeOwner.getColor() + line + DotsAndBoxesOwnershipEnum.getReset();
     return output;
   }
@@ -56,8 +57,8 @@ public class DotsAndBoxesEdge extends Edge {
    * @return String of information about edge
    */
   public String debuggingToString() {
-    int p1 = edgeEndpoints.p1;
-    int p2 = edgeEndpoints.p2;
+    CoordPoint p1 = edgeEndpoints.p1;
+    CoordPoint p2 = edgeEndpoints.p2;
     String output = p1 + ", " + p2 + " is owned by " + edgeOwner;
     return output;
   }
