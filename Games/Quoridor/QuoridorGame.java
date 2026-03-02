@@ -1,8 +1,6 @@
 package Games.Quoridor;
 
 import Games.Core.Game;
-import Games.Core.LineEndpoints;
-import Games.Enums.DotsAndBoxesOwnershipEnum;
 import Games.Enums.MoveOutcomeEnum;
 
 public class QuoridorGame extends Game {
@@ -26,6 +24,7 @@ public class QuoridorGame extends Game {
   public void playSingleGame(int rows, int cols) {
     assert rows == 9 && cols == 9 : "invalid dimensions: quoridor board must be 9x9";
     board = new QuoridorBoard(rows, cols, player1, player2);
+    System.out.println(board);
     currentPlayer = player2; // can make random in the future like in dots and boxes game if we want
 
     // main game loop
@@ -96,6 +95,7 @@ public class QuoridorGame extends Game {
         System.out.println("Invalid input. Try again.\n");
         return playSingleMove();
     }
+    System.out.println(board);
     return board.isSolved() ? MoveOutcomeEnum.WIN : MoveOutcomeEnum.CONTINUE_PLAYING;
   }
 }

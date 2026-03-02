@@ -7,9 +7,10 @@ import java.util.Map;
 
 import Games.Core.Board;
 import Games.Core.LineEndpoints;
+import Games.Enums.DotsAndBoxesOwnershipEnum;
 
 // this assumes some sort of QuoridorPlayer and QuoridorTile classes
-// TODO implement QuoridorPlayer and QuoridorTile classes
+// TODO implement QuoridorPlayer class
 
 public class QuoridorBoard extends Board {
   // set size of board and walls per player as constants
@@ -162,22 +163,56 @@ public class QuoridorBoard extends Board {
   // coordinates and colors already
   public String toString() {
     StringBuilder sb = new StringBuilder();
+    // column header
+    sb.append("\n     ");
+    for (int c = 0; c <= board_cols; c++) {
+      sb.append(String.format("%-3d", c));
+    }
+    sb.append("\n\n");
 
-    // simple grid print with player markers
-    for (int r = 0; r < board_rows; r++) {
-      for (int c = 0; c < board_cols; c++) {
-        if (r == player1.getRow() && c == player1.getCol())
-          sb.append("1 ");
-        else if (r == player2.getRow() && c == player2.getCol())
-          sb.append("2 ");
-        else
-          sb.append(tiles[r][c].toString()).append(" ");
+    for (int r = 0; r <= board_rows; r++) {
+      sb.append(String.format("%-3d  ", r)); // row label
+      // dots and horizontal edges
+      for (int c = 0; c <= board_cols; c++) {
+        sb.append("•");
+        if (c < board_cols) {
+          int p1 = r * 10 + c;
+          int p2 = p1 + 1;
+          QuoridorEdge edge = endpointsToEdge.get(new LineEndpoints(p1, p2));
+          sb.append(edge.toString()); // TODO: add some colors here if edge was marked
+        }
       }
       sb.append("\n");
+
+      // vertical edges and tile centers
+      if (r < board_rows) {
+        sb.append("     ");
+        for (int c = 0; c <= board_cols; c++) {
+          // Handle Vertical Edge
+          int p1 = r * 10 + c;
+          int p2 = p1 + 10;
+          QuoridorEdge vEdge = endpointsToEdge.get(new LineEndpoints(p1, p2));
+          sb.append(vEdge.toString()); // TODO: add some colors here if edge was marked
+          // handle tile center
+          if (c < board_cols) {
+            boolean isPlayer1Here = (player1.getRow() == r && player1.getCol() == c);
+            boolean isPlayer2Here = (player2.getRow() == r && player2.getCol() == c);
+
+            if (isPlayer1Here) {
+              sb.append(DotsAndBoxesOwnershipEnum.PLAYER1.getColor() + " 1" + DotsAndBoxesOwnershipEnum.getReset());
+            } else if (isPlayer2Here) {
+              sb.append(DotsAndBoxesOwnershipEnum.PLAYER2.getColor() + " 2" + DotsAndBoxesOwnershipEnum.getReset());
+            } else {
+              sb.append("  ");
+            }
+          }
+        }
+        sb.append("\n");
+      }
     }
 
-    sb.append("\n")
-        .append(player1.getPlayerName()).append(" walls: ").append(player1.getWallsRemaining()).append("\n")
+    // walls remaining stats
+    sb.append("\n").append(player1.getPlayerName()).append(" walls: ").append(player1.getWallsRemaining()).append("\n")
         .append(player2.getPlayerName()).append(" walls: ").append(player2.getWallsRemaining()).append("\n");
 
     return sb.toString();
