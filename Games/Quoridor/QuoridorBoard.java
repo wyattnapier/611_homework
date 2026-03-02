@@ -9,9 +9,6 @@ import Games.Core.Board;
 import Games.Core.LineEndpoints;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
 
-// this assumes some sort of QuoridorPlayer and QuoridorTile classes
-// TODO implement QuoridorPlayer class
-
 public class QuoridorBoard extends Board {
   // set size of board and walls per player as constants
   public final int DEFAULT_SIZE = 9;
@@ -124,6 +121,9 @@ public class QuoridorBoard extends Board {
    * @return true if move is successful and false otherwise
    */
   // TODO check for walls and for jumps
+  // TODO: either update this or input message so that inputs match as either new
+  // coordinates or offset from old coordinates (can derive in either direction so
+  // doesn't really matter -- just whatever is easiest for users)
   public boolean tryMove(QuoridorPlayer mover, int dr, int dc) {
     int nr = mover.getRow() + dr;
     int nc = mover.getCol() + dc;
@@ -159,8 +159,6 @@ public class QuoridorBoard extends Board {
   }
 
   // toString
-  // TODO: adapt the toString method from the dots and boxes board since it has
-  // coordinates and colors already
   public String toString() {
     StringBuilder sb = new StringBuilder();
     // column header

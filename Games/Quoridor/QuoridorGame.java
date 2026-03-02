@@ -53,7 +53,7 @@ public class QuoridorGame extends Game {
    * @return turn outcome such as win, quit, or continue playing
    */
   public MoveOutcomeEnum playSingleMove() {
-    // TODO: verify prompt/input aligns with how we handle input
+    // TODO: verify prompt/input aligns with input for tryMove and tryPlaceWall
     String prompt = (currentPlayer.getPlayerName()
         + ", enter 'q' to quit, 'w' to mark a wall of length 2 like [w r1 c1 r2 c2], or \n'm' to move your character to a square (use the top left corner's coordinates) like [m r1 c1] \nPut your input here: ");
     String moveInput = input.getRawEndpointInput(prompt);
