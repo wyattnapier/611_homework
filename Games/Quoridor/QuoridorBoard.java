@@ -133,48 +133,81 @@ public class QuoridorBoard extends Board {
     player2.setWallsRemaining(INITIAL_WALLS_PER_PLAYER);
   }
 
+  /**
+   * moves given player to new coordinate calculated from given offset
+   * 
+   * @param mover current player
+   * @param dr    change in row
+   * @param dc    change in col
+   * @return true if successful and false otherwise
+   */
   public boolean tryMove(QuoridorPlayer mover, int dr, int dc) {
-    // ensure moving in exactly one cardinal direction by exactly one step
-    if (dr != 0 && dc != 0 || dr == 0 && dc == 0)
-      return false;
-    if (Math.abs(dr) > 2 || Math.abs(dc) > 2) // todo: limit this to one either here or when applying the jump if the
-                                              // mover isn't there?
-      return false;
-
-    int cr = mover.getRow();
-    int cc = mover.getCol();
-    int nr = cr + dr;
-    int nc = cc + dc;
-
-    if (!isTileWithinBounds(nr, nc))
-      return false;
-
-    // System.out.println("(" + cr + ", " + cc + ") --> (" + nr + ", " + nc + ")");
-
-    QuoridorPlayer other = (mover == player1) ? player2 : player1;
-
-    // check if there's a wall between current tile and next tile
-    if (isWallBetween(cr, cc, nr, nc))
-      return false;
-
-    // if target tile has opponent on it, attempt jump
-    if (nr == other.getRow() && nc == other.getCol()) {
-      int jumpR = nr + dr;
-      int jumpC = nc + dc;
-
-      // jump straight over if in bounds and no wall behind opponent
-      if (isTileWithinBounds(jumpR, jumpC) && !isWallBetween(nr, nc, jumpR, jumpC)) {
-        mover.setPosition(jumpR, jumpC);
+    List<CoordPoint> validMoves = getValidMoves(mover);
+    for (CoordPoint move : validMoves) {
+      if (move.getRow() == dr && move.getCol() == dc) {
+        mover.setPosition(mover.getRow() + dr, mover.getCol() + dc);
         mover.incrementMoves();
         return true;
       }
-      // TODO: handle diagonal jumps when there is wall/boundary in the wya
-      return false;
     }
+    return false;
+  }
 
-    mover.setPosition(nr, nc);
-    mover.incrementMoves();
-    return true;
+  /**
+   * returns all valid moves for a given player as a list of [dr, dc] pairs
+   *
+   * @param mover the player whose valid moves we want
+   * @return list of valid [dr, dc] offset pairs
+   */
+  public List<CoordPoint> getValidMoves(QuoridorPlayer mover) {
+    List<CoordPoint> validMoves = new ArrayList<>();
+    int cr = mover.getRow();
+    int cc = mover.getCol();
+
+    QuoridorPlayer other = (mover == player1) ? player2 : player1;
+    int or = other.getRow();
+    int oc = other.getCol();
+
+    CoordPoint[] cardinalDirections = { new CoordPoint(-1, 0), new CoordPoint(1, 0), new CoordPoint(0, -1),
+        new CoordPoint(0, 1) };
+
+    for (CoordPoint dir : cardinalDirections) {
+      int dr = dir.getRow();
+      int dc = dir.getCol();
+      int nr = cr + dr;
+      int nc = cc + dc;
+
+      if (!isTileWithinBounds(nr, nc) || isWallBetween(cr, cc, nr, nc))
+        continue;
+
+      // opponent is in the way — check for jumps
+      if (nr == or && nc == oc) {
+        int jumpR = nr + dr;
+        int jumpC = nc + dc;
+
+        // straight jump
+        if (isTileWithinBounds(jumpR, jumpC) && !isWallBetween(nr, nc, jumpR, jumpC)) {
+          validMoves.add(new CoordPoint(jumpR - cr, jumpC - cc));
+          continue;
+        }
+
+        // diagonal jumps (straight blocked)
+        int[] perpDr = (dr != 0) ? new int[] { 0, 0 } : new int[] { -1, 1 };
+        int[] perpDc = (dc != 0) ? new int[] { -1, 1 } : new int[] { 0, 0 };
+
+        for (int i = 0; i < 2; i++) {
+          int diagR = nr + perpDr[i];
+          int diagC = nc + perpDc[i];
+          if (isTileWithinBounds(diagR, diagC) && !isWallBetween(nr, nc, diagR, diagC)) {
+            validMoves.add(new CoordPoint(diagR - cr, diagC - cc));
+          }
+        }
+        continue;
+      }
+      // normal move
+      validMoves.add(new CoordPoint(dr, dc));
+    }
+    return validMoves;
   }
 
   /**
