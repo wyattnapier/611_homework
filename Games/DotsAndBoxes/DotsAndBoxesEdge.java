@@ -1,18 +1,18 @@
 package Games.DotsAndBoxes;
 
 import Games.Core.LineEndpoints;
+import Games.Core.Edge;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
 
 /**
  * This class is an edge for the dots and boxes game. Each edge will have
  * endpoints and an owner.
  */
-public class DotsAndBoxesEdge {
-  private LineEndpoints edgeEndpoints; // two endpoint of a line
+public class DotsAndBoxesEdge extends Edge {
   private DotsAndBoxesOwnershipEnum edgeOwner = DotsAndBoxesOwnershipEnum.NOBODY;
 
   public DotsAndBoxesEdge(LineEndpoints ends) {
-    edgeEndpoints = ends;
+    super(ends);
   }
 
   /**
@@ -36,14 +36,6 @@ public class DotsAndBoxesEdge {
    */
   public Boolean edgeHasOwner() {
     return edgeOwner != DotsAndBoxesOwnershipEnum.NOBODY;
-  }
-
-  /**
-   * 
-   * @return endpoints of the edge as a LineEndpoints object
-   */
-  public LineEndpoints getEdgeEndpoints() {
-    return edgeEndpoints;
   }
 
   /**
