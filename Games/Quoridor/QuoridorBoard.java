@@ -121,10 +121,13 @@ public class QuoridorBoard extends Board {
    * @return true if move is successful and false otherwise
    */
   // TODO check for walls and for jumps
-  // TODO: either update this or input message so that inputs match as either new
   // coordinates or offset from old coordinates (can derive in either direction so
   // doesn't really matter -- just whatever is easiest for users)
   public boolean tryMove(QuoridorPlayer mover, int dr, int dc) {
+    // ensure that they're moving, but only in cardinal directions
+    if (dr != 0 && dc != 0 || dr == 0 && dc == 0)
+      return false;
+
     int nr = mover.getRow() + dr;
     int nc = mover.getCol() + dc;
 
