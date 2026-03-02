@@ -127,42 +127,79 @@ public class QuoridorBoard extends Board {
    */
   public void resetPlayersToStart() {
     int startCol = board_cols / 2; // takes the floor to give correct index
-    player1.setPosition(board_rows - player1.getGoalRow(), startCol);
-    player2.setPosition(board_rows - player1.getGoalRow(), startCol);
+    player1.setPosition(board_rows - 1 - player1.getGoalRow(), startCol);
+    player2.setPosition(board_rows - 1 - player2.getGoalRow(), startCol);
     player1.setWallsRemaining(INITIAL_WALLS_PER_PLAYER);
     player2.setWallsRemaining(INITIAL_WALLS_PER_PLAYER);
   }
 
-  /**
-   * move the player if move is valid
-   * 
-   * @param mover current player that is moving
-   * @param dr    change in row position
-   * @param dc    change in column position
-   * @return true if move is successful and false otherwise
-   */
-  // TODO check for walls and for jumps
-  // coordinates or offset from old coordinates (can derive in either direction so
-  // doesn't really matter -- just whatever is easiest for users)
   public boolean tryMove(QuoridorPlayer mover, int dr, int dc) {
-    // ensure that they're moving, but only in cardinal directions
+    // ensure moving in exactly one cardinal direction by exactly one step
     if (dr != 0 && dc != 0 || dr == 0 && dc == 0)
       return false;
+    if (Math.abs(dr) > 2 || Math.abs(dc) > 2) // todo: limit this to one either here or when applying the jump if the
+                                              // mover isn't there?
+      return false;
 
-    int nr = mover.getRow() + dr;
-    int nc = mover.getCol() + dc;
+    int cr = mover.getRow();
+    int cc = mover.getCol();
+    int nr = cr + dr;
+    int nc = cc + dc;
 
     if (!isTileWithinBounds(nr, nc))
       return false;
 
-    // can't move onto opponent
+    // System.out.println("(" + cr + ", " + cc + ") --> (" + nr + ", " + nc + ")");
+
     QuoridorPlayer other = (mover == player1) ? player2 : player1;
-    if (nr == other.getRow() && nc == other.getCol())
+
+    // check if there's a wall between current tile and next tile
+    if (isWallBetween(cr, cc, nr, nc))
       return false;
+
+    // if target tile has opponent on it, attempt jump
+    if (nr == other.getRow() && nc == other.getCol()) {
+      int jumpR = nr + dr;
+      int jumpC = nc + dc;
+
+      // jump straight over if in bounds and no wall behind opponent
+      if (isTileWithinBounds(jumpR, jumpC) && !isWallBetween(nr, nc, jumpR, jumpC)) {
+        mover.setPosition(jumpR, jumpC);
+        mover.incrementMoves();
+        return true;
+      }
+      // TODO: handle diagonal jumps when there is wall/boundary in the wya
+      return false;
+    }
 
     mover.setPosition(nr, nc);
     mover.incrementMoves();
     return true;
+  }
+
+  /**
+   * checks if there is a wall on the shared edge between two adjacent tiles
+   *
+   * @param r1 row of first tile
+   * @param c1 col of first tile
+   * @param r2 row of second tile
+   * @param c2 col of second tile
+   * @return true if a wall exists between them
+   */
+  private boolean isWallBetween(int r1, int c1, int r2, int c2) {
+    QuoridorTile tile = tiles[r1][c1];
+    QuoridorEdge sharedEdge;
+
+    if (r2 == r1 - 1)
+      sharedEdge = tile.getTopEdge();
+    else if (r2 == r1 + 1)
+      sharedEdge = tile.getBottomEdge();
+    else if (c2 == c1 - 1)
+      sharedEdge = tile.getLeftEdge();
+    else
+      sharedEdge = tile.getRightEdge();
+
+    return sharedEdge != null && sharedEdge.isWall();
   }
 
   /**

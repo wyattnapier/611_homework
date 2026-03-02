@@ -22,7 +22,7 @@ public class QuoridorGame extends Game {
    * @param cols is number of cols for the board (must be 9)
    */
   public void playSingleGame(int rows, int cols) {
-    assert rows == 9 && cols == 9 : "invalid dimensions: quoridor board must be 9x9";
+    assert rows == 9 && cols == 9 : "Invalid dimensions: quoridor board must be 9x9";
     board = new QuoridorBoard(rows, cols, player1, player2);
     System.out.println(board);
     currentPlayer = player2; // can make random in the future like in dots and boxes game if we want

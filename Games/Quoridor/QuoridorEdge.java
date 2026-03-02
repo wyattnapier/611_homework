@@ -22,7 +22,7 @@ public class QuoridorEdge extends Edge {
    * 
    * @return true if this edge has a wall else false
    */
-  public boolean getEdgeHasWall() {
+  public boolean isWall() {
     return edgeHasWall;
   }
 }
