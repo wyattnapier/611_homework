@@ -145,10 +145,7 @@ public class Input {
    * @param playerName name of current player
    * @return string of "w" "q" or endpoints such as "0 0 0 1"
    */
-  public String getRawEndpointInput(String playerName) {
-    String prompt = "\n" + playerName
-        + ", select the points that you would like to draw a line between or enter 'q' to quit." +
-        " Enter them in the following format: r1 c1 r2 c2.\nInput the points here (space separated): ";
+  public String getRawEndpointInput(String prompt) {
     return getStringInput(prompt).toLowerCase().trim();
   }
 

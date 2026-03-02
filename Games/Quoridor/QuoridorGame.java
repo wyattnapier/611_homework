@@ -1,6 +1,8 @@
 package Games.Quoridor;
 
 import Games.Core.Game;
+import Games.Core.LineEndpoints;
+import Games.Enums.DotsAndBoxesOwnershipEnum;
 import Games.Enums.MoveOutcomeEnum;
 
 public class QuoridorGame extends Game {
@@ -24,7 +26,7 @@ public class QuoridorGame extends Game {
   public void playSingleGame(int rows, int cols) {
     assert rows == 9 && cols == 9 : "invalid dimensions: quoridor board must be 9x9";
     board = new QuoridorBoard(rows, cols, player1, player2);
-    currentPlayer = player1; // can make random in the future like in dots and boxes game if we want
+    currentPlayer = player2; // can make random in the future like in dots and boxes game if we want
 
     // main game loop
     MoveOutcomeEnum gameResult = MoveOutcomeEnum.CONTINUE_PLAYING;
@@ -45,21 +47,55 @@ public class QuoridorGame extends Game {
     }
   }
 
+  /**
+   * plays a single move of the game (uses recursion to keep retrying for a valid
+   * move)
+   * 
+   * @return turn outcome such as win, quit, or continue playing
+   */
   public MoveOutcomeEnum playSingleMove() {
-    String moveInput = input
-        .getStringInput(currentPlayer.getPlayerName()
-            + ", enter 'q' to quit, 'w' to mark a wall of length 2, or 'm' to move your character to a square (use the top left corner's coordinates): ");
+    // TODO: verify prompt/input aligns with how we handle input
+    String prompt = (currentPlayer.getPlayerName()
+        + ", enter 'q' to quit, 'w' to mark a wall of length 2 like [w r1 c1 r2 c2], or \n'm' to move your character to a square (use the top left corner's coordinates) like [m r1 c1] \nPut your input here: ");
+    String moveInput = input.getRawEndpointInput(prompt);
     System.out.println();
 
-    if (moveInput.toLowerCase() == "q") {
-      return MoveOutcomeEnum.QUIT;
-    } else if (moveInput.toLowerCase() == "win") {
-      board.setBoardToSolvedState();
-      System.out.println(board);
-      return MoveOutcomeEnum.WIN;
-    } else {
-      // TODO: actually implement marking the wall or moving the character
-      return board.isSolved() ? MoveOutcomeEnum.WIN : MoveOutcomeEnum.CONTINUE_PLAYING;
+    // core logic based on user input and basic input validation
+    String[] moveInputParts = moveInput.split("\\s+");
+    switch (moveInputParts[0]) {
+      case "win":
+        board.setBoardToSolvedState();
+        System.out.println(board);
+        return MoveOutcomeEnum.WIN;
+      case "q":
+        return MoveOutcomeEnum.QUIT;
+      case "m":
+        // move character
+        if (moveInputParts.length != 3) {
+          System.out.println("Insufficient arguments in input. Try again.\n");
+          return playSingleMove(); // recurse to try again
+        }
+        if (!board.tryMove(currentPlayer, Integer.parseInt(moveInputParts[1]), Integer.parseInt(moveInputParts[2]))) {
+          System.out.println("Invalid input. Try again.\n");
+          return playSingleMove(); // recurse for another attempt to input valid input
+        }
+        break;
+      case "w":
+        // add a wall
+        if (moveInputParts.length != 5) {
+          System.out.println("Insufficient arguments in input. Try again.\n");
+          return playSingleMove(); // recurse to try again
+        }
+        if (!board.tryPlaceWall(currentPlayer, Integer.parseInt(moveInputParts[1]), Integer.parseInt(moveInputParts[2]),
+            Integer.parseInt(moveInputParts[3]), Integer.parseInt(moveInputParts[4]))) {
+          System.out.println("Invalid input. Try again.\n");
+          return playSingleMove(); // recurse for another attempt to input valid input
+        }
+        break;
+      default:
+        System.out.println("Invalid input. Try again.\n");
+        return playSingleMove();
     }
+    return board.isSolved() ? MoveOutcomeEnum.WIN : MoveOutcomeEnum.CONTINUE_PLAYING;
   }
 }

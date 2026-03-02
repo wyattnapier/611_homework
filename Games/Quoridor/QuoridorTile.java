@@ -4,11 +4,12 @@ import Games.Core.Tile;
 
 public class QuoridorTile implements Tile {
   private int row, col;
+  private QuoridorEdge[] edges; // order edge list as up, right, left, right
 
-  // TODO: make it so that it takes in 4 edges like dots and boxes game instead
-  QuoridorTile(int row, int col) {
-    this.row = row;
-    this.col = col;
+  QuoridorTile(int rc, QuoridorEdge[] tileEdges) {
+    this.row = rc / 10;
+    this.col = rc % 10;
+    edges = tileEdges;
   }
 
   /**

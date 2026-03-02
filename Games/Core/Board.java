@@ -9,6 +9,8 @@ public abstract class Board {
     protected int board_rows, board_cols; // dimensions of the board
     protected static final int[][] ADJACENT_OFFSETS = {
             { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } }; // up, right, down, left
+    protected int[] verticesOffsets = { 0, 10, 11, 1 }; // could just use single numbers if we set the max number of
+                                                        // rows and cols to 9x9
 
     /**
      * Constructor for Board

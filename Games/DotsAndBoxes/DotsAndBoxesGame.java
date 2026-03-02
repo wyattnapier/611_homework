@@ -120,7 +120,10 @@ public class DotsAndBoxesGame extends Game {
   private LineEndpoints getUserInputEndpoints() {
     String currentPlayerName = currentPlayer.getPlayerName();
     while (true) {
-      String raw = input.getRawEndpointInput(currentPlayerName); // Get the string "q", "w", or "0 0 0 1"
+      String prompt = "\n" + currentPlayerName
+          + ", select the points that you would like to draw a line between or enter 'q' to quit." +
+          " Enter them in the following format: r1 c1 r2 c2.\nInput the points here (space separated): ";
+      String raw = input.getRawEndpointInput(prompt); // Get the string "q", "w", or "0 0 0 1"
 
       if (raw.equals("q")) {
         return null; // Signal to playSingleMove that the user quit

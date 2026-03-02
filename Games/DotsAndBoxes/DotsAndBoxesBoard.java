@@ -16,8 +16,6 @@ public class DotsAndBoxesBoard extends Board {
                                                                                   // objects
   private Map<DotsAndBoxesEdge, List<DotsAndBoxesTile>> edgeToTiles = new HashMap<>(); // maps edges to the tiles that
                                                                                        // they're a part of
-  private int[] verticesOffsets = { 0, 10, 11, 1 }; // could just use single numbers if we set the max number of rows
-                                                    // and cols to 9x9
   private DotsAndBoxesTile[][] tiles;
   private int numCompletedTiles;
 
