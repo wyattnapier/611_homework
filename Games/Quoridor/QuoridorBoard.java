@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sound.sampled.Line;
+
 import Games.Core.Board;
 import Games.Core.CoordPoint;
 import Games.Core.LineEndpoints;
@@ -245,14 +247,69 @@ public class QuoridorBoard extends Board {
    * @return true if successfully places wall -- false if not
    */
   public boolean tryPlaceWall(QuoridorPlayer currPlayer, int r1, int c1, int r2, int c2) {
-    boolean hasWallsLeftToPlace = currPlayer.getWallsRemaining() > 0; // wall count check
-    // TODO: implement legal wall location + BFS path + wall count checks -> place
-    // wall (implement storage) + decrement wall count
-    return false;
+    if (currPlayer.getWallsRemaining() <= 0) {
+      System.out.println("You cannot place any more walls");
+      return false;
+    }
+    CoordPoint point1 = new CoordPoint(r1, c1);
+    CoordPoint point2 = new CoordPoint(r2, c2);
+    if (!(isEdgePointWithinBounds(point1) && isEdgePointWithinBounds(point2))) {
+      System.out.println("An edge endpoint is out of bounds.");
+      return false;
+    }
+    // horizontally aligned
+    CoordPoint midPoint;
+    if (r1 == r2) {
+      if (Math.abs(c1 - c2) != 2) {
+        System.out.println("Wall must be length 2");
+        return false;
+      }
+      int midpointCol = Math.max(c1, c2) - 1;
+      midPoint = new CoordPoint(r1, midpointCol);
+    }
+    // vertically aligned
+    else if (c1 == c2) {
+      if (Math.abs(r1 - r2) != 2) {
+        System.out.println("Wall must be length 2");
+        return false;
+      }
+      int midpointRow = Math.max(r1, r2) - 1;
+      midPoint = new CoordPoint(midpointRow, c1);
+    } else {
+      // must be aligned in either rows or columns
+      System.out.println("Walls must be horizontal or vertical and length 2.");
+      return false;
+    }
+    // mark the edges and check for overlap (won't implement change if there is
+    // overlap)
+    QuoridorEdge edge1 = endpointsToEdge.get(new LineEndpoints(point1, midPoint));
+    QuoridorEdge edge2 = endpointsToEdge.get(new LineEndpoints(point2, midPoint));
+    if (!edge1.setIsWall(true)) {
+      System.out.println("New walls cannot overlap with existing walls");
+      return false;
+    }
+    if (!edge2.setIsWall(true)) {
+      edge1.setIsWall(false); // roll back the change to edge1
+      System.out.println("New walls cannot overlap with existing walls");
+      return false;
+    }
+
+    // TODO: implement pathExists function and uncomment this code block
+    // run BFS check for path existence and if it fails the unmark the edges
+    // if (!pathExists()) {
+    // edge1.setIsWall(false);
+    // edge2.setIsWall(false);
+    // System.out.println("You cannot completely trap a player with walls.");
+    // return false;
+    // }
+
+    currPlayer.useWall();
+    return true;
   }
 
   // toString
   public String toString() {
+    String wallColor = "\u001B[33m"; // yellow for walls
     StringBuilder sb = new StringBuilder();
     // walls remaining stats
     sb.append("\n").append(player1.getPlayerName()).append(" walls: ").append(player1.getWallsRemaining()).append("\n")
@@ -274,7 +331,11 @@ public class QuoridorBoard extends Board {
           CoordPoint p1 = new CoordPoint(r, c);
           CoordPoint p2 = new CoordPoint(r, c + 1);
           QuoridorEdge edge = endpointsToEdge.get(new LineEndpoints(p1, p2));
-          sb.append(edge.toString()); // TODO: add some colors here if edge was marked
+          if (edge.isWall()) {
+            sb.append(wallColor + edge.toString() + DotsAndBoxesOwnershipEnum.getReset());
+          } else {
+            sb.append(edge.toString());
+          }
         }
       }
       sb.append("\n");
@@ -287,7 +348,11 @@ public class QuoridorBoard extends Board {
           CoordPoint p1 = new CoordPoint(r, c);
           CoordPoint p2 = new CoordPoint(r + 1, c);
           QuoridorEdge vEdge = endpointsToEdge.get(new LineEndpoints(p1, p2));
-          sb.append(vEdge.toString()); // TODO: add some colors here if edge was marked
+          if (vEdge.isWall()) {
+            sb.append(wallColor + vEdge.toString() + DotsAndBoxesOwnershipEnum.getReset());
+          } else {
+            sb.append(vEdge.toString());
+          }
           // handle tile center
           if (c < board_cols) {
             boolean isPlayer1Here = (player1.getRow() == r && player1.getCol() == c);

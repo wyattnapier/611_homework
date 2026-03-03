@@ -14,8 +14,11 @@ public class QuoridorEdge extends Edge {
   /**
    * adds a wall to an edge
    */
-  public void addWallToEdge() {
-    edgeHasWall = true;
+  public boolean setIsWall(boolean markIsWall) {
+    if (isWall() == markIsWall)
+      return false;
+    edgeHasWall = markIsWall;
+    return true;
   }
 
   /**
