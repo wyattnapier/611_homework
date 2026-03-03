@@ -34,9 +34,16 @@ public abstract class Game {
   public void setupAndPlayMultipleGames() {
     int minDim = getMinDimension();
     int maxDim = getMaxDimension();
-    int rows = input.getIntForBoardDimension("rows", minDim, maxDim);
-    int cols = input.getIntForBoardDimension("columns", minDim, maxDim);
-    System.out.println();
+    int rows, cols;
+    // only prompt for dimensions if user gets a choice
+    if (minDim == maxDim) {
+      rows = minDim;
+      cols = minDim;
+    } else {
+      rows = input.getIntForBoardDimension("rows", minDim, maxDim);
+      cols = input.getIntForBoardDimension("columns", minDim, maxDim);
+      System.out.println();
+    }
     // control flow for playing multiple games
     String playAgainInput;
     do {
