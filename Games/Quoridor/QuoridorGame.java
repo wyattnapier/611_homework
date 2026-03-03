@@ -1,18 +1,22 @@
 package Games.Quoridor;
 
 import Games.Core.Game;
+import Games.Core.Player;
+import Games.Enums.DotsAndBoxesOwnershipEnum;
 import Games.Enums.MoveOutcomeEnum;
 
 public class QuoridorGame extends Game {
   private QuoridorPlayer player1, player2, currentPlayer;
   private QuoridorBoard board;
+  public final int DEFAULT_SIZE = 9;
+  public final int INITIAL_WALLS_PER_PLAYER = 10;
 
-  public QuoridorGame(QuoridorPlayer player1, QuoridorPlayer player2, Games.IO.Input input) {
-    this.player1 = player1;
-    this.player2 = player2;
+  public QuoridorGame(Player player1, Player player2, Games.IO.Input input) {
+    this.player1 = new QuoridorPlayer(player1, 0, DEFAULT_SIZE / 2, DEFAULT_SIZE - 1, INITIAL_WALLS_PER_PLAYER);
+    this.player2 = new QuoridorPlayer(player2, DEFAULT_SIZE - 1, DEFAULT_SIZE / 2, 0, INITIAL_WALLS_PER_PLAYER);
     this.input = input;
-    this.MIN_DIMENSION = 9; // fixed size 9x9
-    this.MAX_DIMENSION = 9; // fixed size 9x9
+    this.MIN_DIMENSION = DEFAULT_SIZE; // fixed size 9x9
+    this.MAX_DIMENSION = DEFAULT_SIZE; // fixed size 9x9
   }
 
   /**
@@ -53,10 +57,12 @@ public class QuoridorGame extends Game {
    * @return turn outcome such as win, quit, or continue playing
    */
   public MoveOutcomeEnum playSingleMove() {
-    String prompt = currentPlayer.getPlayerName()
+    String color = (currentPlayer == player1) ? DotsAndBoxesOwnershipEnum.PLAYER1.getColor()
+        : DotsAndBoxesOwnershipEnum.PLAYER2.getColor();
+    String prompt = color + currentPlayer.getPlayerName() + DotsAndBoxesOwnershipEnum.getReset()
         + ", what would you like to do?\n"
         + "  [m dr dc]          → move by offset (e.g. m 0 1 = right, m -1 0 = up)\n"
-        + "  [w r1 c1 r2 c2]   → place a wall between vertices (r1,c1) and (r2,c2)\n"
+        + "  [w r1 c1 r2 c2]    → place a wall between vertices (r1,c1) and (r2,c2)\n"
         + "  [q]                → quit\n"
         + "Your move: ";
     String moveInput = input.getRawEndpointInput(prompt);

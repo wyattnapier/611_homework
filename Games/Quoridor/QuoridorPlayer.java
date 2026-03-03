@@ -3,14 +3,16 @@ package Games.Quoridor;
 import Games.Core.Player;
 
 public class QuoridorPlayer extends Player {
+  private Player basePlayer;
   private int row;
   private int col;
   private int wallsRemaining;
   private int goalRow;
 
   // constructor
-  public QuoridorPlayer(String name, int startRow, int startCol, int goalRow, int initialWalls) {
-    super(name);
+  public QuoridorPlayer(Player base, int startRow, int startCol, int goalRow, int initialWalls) {
+    super(base.getPlayerName());
+    basePlayer = base;
     this.row = startRow;
     this.col = startCol;
     this.goalRow = goalRow;
@@ -48,5 +50,13 @@ public class QuoridorPlayer extends Player {
       return false;
     wallsRemaining--;
     return true;
+  }
+
+  /**
+   * overrides subclass method by calling the method of the superclass on the base
+   * player that holds the stats for the player
+   */
+  public void incrementGamesWon() {
+    this.basePlayer.incrementGamesWon();
   }
 }

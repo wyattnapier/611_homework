@@ -4,7 +4,6 @@ import java.util.*;
 
 import Games.IO.*;
 import Games.Quoridor.QuoridorGame;
-import Games.Quoridor.QuoridorPlayer;
 import Games.SlidingPuzzle.SlidingPuzzleGame;
 import Games.DotsAndBoxes.DotsAndBoxesGame;
 
@@ -90,10 +89,8 @@ public class Driver {
           // TODO: this initialization of quoridor players feels incorrect, but based on
           // the other games we should be able to share player objects between
           // games in some way
-          QuoridorPlayer qPlayer1 = new QuoridorPlayer(player1.getPlayerName(), 0, 4, 8, 0);
-          QuoridorPlayer qPlayer2 = new QuoridorPlayer(player2.getPlayerName(), 8, 4, 0, 0);
           output.printQuoridorDescription();
-          game = new QuoridorGame(qPlayer1, qPlayer2, input);
+          game = new QuoridorGame(player1, player2, input);
           break;
         case "quit":
           output.printFinalEndMessage(player1, player2);

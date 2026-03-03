@@ -12,7 +12,6 @@ import Games.Enums.DotsAndBoxesOwnershipEnum;
 
 public class QuoridorBoard extends Board {
   // set size of board and walls per player as constants
-  public final int DEFAULT_SIZE = 9;
   public final int INITIAL_WALLS_PER_PLAYER = 10;
 
   // board of tiles and players
@@ -255,6 +254,10 @@ public class QuoridorBoard extends Board {
   // toString
   public String toString() {
     StringBuilder sb = new StringBuilder();
+    // walls remaining stats
+    sb.append("\n").append(player1.getPlayerName()).append(" walls: ").append(player1.getWallsRemaining()).append("\n")
+        .append(player2.getPlayerName()).append(" walls: ").append(player2.getWallsRemaining()).append("\n");
+
     // column header
     sb.append("\n     ");
     for (int c = 0; c <= board_cols; c++) {
@@ -302,10 +305,6 @@ public class QuoridorBoard extends Board {
         sb.append("\n");
       }
     }
-
-    // walls remaining stats
-    sb.append("\n").append(player1.getPlayerName()).append(" walls: ").append(player1.getWallsRemaining()).append("\n")
-        .append(player2.getPlayerName()).append(" walls: ").append(player2.getWallsRemaining()).append("\n");
 
     return sb.toString();
   }
