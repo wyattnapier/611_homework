@@ -86,9 +86,6 @@ public class Driver {
             }
             player2 = new Player(player2NameInput);
           }
-          // TODO: this initialization of quoridor players feels incorrect, but based on
-          // the other games we should be able to share player objects between
-          // games in some way
           output.printQuoridorDescription();
           game = new QuoridorGame(player1, player2, input);
           break;
