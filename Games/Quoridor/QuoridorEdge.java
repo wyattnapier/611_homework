@@ -3,9 +3,17 @@ package Games.Quoridor;
 import Games.Core.Edge;
 import Games.Core.LineEndpoints;
 
+/**
+ * edge on quooridor board that can become a wall
+ */
 public class QuoridorEdge extends Edge {
   boolean edgeHasWall;
 
+  /**
+   * constructor
+   * 
+   * @param ends endpoints of the edge
+   */
   public QuoridorEdge(LineEndpoints ends) {
     super(ends);
     edgeHasWall = false;

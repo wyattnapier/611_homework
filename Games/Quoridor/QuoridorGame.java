@@ -5,6 +5,9 @@ import Games.Core.Player;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
 import Games.Enums.MoveOutcomeEnum;
 
+/**
+ * class that implements high level logic of quoridor game
+ */
 public class QuoridorGame extends Game {
   private QuoridorPlayer player1, player2, currentPlayer;
   private QuoridorBoard board;

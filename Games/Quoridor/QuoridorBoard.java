@@ -8,13 +8,15 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import Games.Core.Board;
 import Games.Core.CoordPoint;
 import Games.Core.LineEndpoints;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
 
+/**
+ * handles the board state for the quoridor game and the core logic
+ */
 public class QuoridorBoard extends Board {
   // set size of board and walls per player as constants
   public final int INITIAL_WALLS_PER_PLAYER = 10;
@@ -86,7 +88,11 @@ public class QuoridorBoard extends Board {
     }
   }
 
-  // check if one of the players has reached the opposite end
+  /**
+   * check if one of the players has reached the opposite end
+   * 
+   * @return returns true if board is solved
+   */
   public boolean isSolved() {
     return (player1.getRow() == player1.getGoalRow()) || (player2.getRow() == player2.getGoalRow());
   }
@@ -102,7 +108,7 @@ public class QuoridorBoard extends Board {
 
   /**
    * checks if the input line endpoints (which contains two endpoints p1 and p2)
-   * is within bounds
+   * is within bounds (bounds are different for tile than end points)
    * 
    * @param ends points p1 and p2 which form one line
    * @return true if points are adjacent and both ends are within bounds to form a
@@ -113,13 +119,21 @@ public class QuoridorBoard extends Board {
     return pointsAreAdjacent && isEdgePointWithinBounds(ends.p1) && isEdgePointWithinBounds(ends.p2);
   }
 
+  /**
+   * checks if edge point is within bounds
+   * 
+   * @param point edgepoint like a vertex
+   * @return true if point is within bounds of board for edges
+   */
   public boolean isEdgePointWithinBounds(CoordPoint point) {
     int r = point.getRow();
     int c = point.getCol();
     return (0 <= r) && (r <= board_rows) && (0 <= c) && (c <= board_cols);
   }
 
-  // just for testing when we force a win with "w"
+  /**
+   * set board to solved state when inputting secret win command "win"
+   */
   public void setBoardToSolvedState() {
     player1.setPosition(player1.getGoalRow(), player1.getCol());
     player2.setPosition(player2.getGoalRow(), player2.getCol());
