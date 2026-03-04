@@ -56,4 +56,12 @@ public class QuoridorPlayer extends Player {
   public void incrementGamesWon() {
     this.basePlayer.incrementGamesWon();
   }
+
+  /**
+   * since we're updating the number of games won for the base player we should
+   * also be using that as the total number of games won
+   */
+  public int getNumberOfGamesWon() {
+    return this.basePlayer.getNumberOfGamesWon();
+  }
 }

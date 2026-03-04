@@ -8,15 +8,17 @@ import Games.Enums.MoveOutcomeEnum;
 public class QuoridorGame extends Game {
   private QuoridorPlayer player1, player2, currentPlayer;
   private QuoridorBoard board;
-  public final int DEFAULT_SIZE = 9;
+  public final int DEFAULT_BOARD_SIZE = 9;
   public final int INITIAL_WALLS_PER_PLAYER = 10;
 
   public QuoridorGame(Player player1, Player player2, Games.IO.Input input) {
-    this.player1 = new QuoridorPlayer(player1, 0, DEFAULT_SIZE / 2, DEFAULT_SIZE - 1, INITIAL_WALLS_PER_PLAYER);
-    this.player2 = new QuoridorPlayer(player2, DEFAULT_SIZE - 1, DEFAULT_SIZE / 2, 0, INITIAL_WALLS_PER_PLAYER);
+    this.player1 = new QuoridorPlayer(player1, 0, DEFAULT_BOARD_SIZE / 2, DEFAULT_BOARD_SIZE - 1,
+        INITIAL_WALLS_PER_PLAYER);
+    this.player2 = new QuoridorPlayer(player2, DEFAULT_BOARD_SIZE - 1, DEFAULT_BOARD_SIZE / 2, 0,
+        INITIAL_WALLS_PER_PLAYER);
     this.input = input;
-    this.MIN_DIMENSION = DEFAULT_SIZE; // fixed size 9x9
-    this.MAX_DIMENSION = DEFAULT_SIZE; // fixed size 9x9
+    this.MIN_DIMENSION = DEFAULT_BOARD_SIZE; // fixed size 9x9
+    this.MAX_DIMENSION = DEFAULT_BOARD_SIZE; // fixed size 9x9
   }
 
   /**

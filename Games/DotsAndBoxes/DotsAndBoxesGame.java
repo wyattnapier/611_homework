@@ -11,13 +11,13 @@ import Games.Enums.MoveOutcomeEnum;
  * superclass method to setup game
  */
 public class DotsAndBoxesGame extends Game {
-  private Player player1, player2, currentPlayer;
+  private DotsAndBoxesPlayer player1, player2, currentPlayer;
   private DotsAndBoxesBoard board;
   private Random rand;
 
-  public DotsAndBoxesGame(Player player1, Player player2, Games.IO.Input input) {
-    this.player1 = player1;
-    this.player2 = player2;
+  public DotsAndBoxesGame(Player basePlayer1, Player basePlayer2, Games.IO.Input input) {
+    player1 = new DotsAndBoxesPlayer(basePlayer1);
+    player2 = new DotsAndBoxesPlayer(basePlayer2);
     this.input = input;
     player1.resetNumberOfBoxesOwned();
     player2.resetNumberOfBoxesOwned();

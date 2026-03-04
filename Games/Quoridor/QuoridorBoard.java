@@ -145,7 +145,6 @@ public class QuoridorBoard extends Board {
     for (CoordPoint move : validMoves) {
       if (move.getRow() == dr && move.getCol() == dc) {
         mover.setPosition(mover.getRow() + dr, mover.getCol() + dc);
-        mover.incrementMoves();
         return true;
       }
     }

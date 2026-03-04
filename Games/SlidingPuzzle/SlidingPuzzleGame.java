@@ -11,7 +11,7 @@ import Games.IO.Input;
  * handles user
  */
 public class SlidingPuzzleGame extends Game {
-  private Player player;
+  private SlidingPuzzlePlayer player;
   private SlidingPuzzleBoard board;
 
   /**
@@ -19,8 +19,8 @@ public class SlidingPuzzleGame extends Game {
    * 
    * @param playerName name of the player
    */
-  public SlidingPuzzleGame(Player player, Input input) {
-    this.player = player;
+  public SlidingPuzzleGame(Player basePlayer, Input input) {
+    this.player = new SlidingPuzzlePlayer(basePlayer);
     this.input = input;
     this.MIN_DIMENSION = 2;
     this.MAX_DIMENSION = 9;
@@ -51,7 +51,7 @@ public class SlidingPuzzleGame extends Game {
       player.incrementGamesWon();
       System.out.println("Congratulations! You've won the game!");
       System.out.println("It only took you " + player.getNumberOfMoves() + " moves to win your last game!");
-      System.out.println("You've won " + player.getNumberOfGamesWon() + " games!\n");
+      System.out.println("You've won " + player.getNumberOfGamesWon() + " games overall!\n");
     } else if (continuePlayingFlag == MoveOutcomeEnum.QUIT) {
       System.out.println("You won " + player.getNumberOfGamesWon() + " games!");
     }
