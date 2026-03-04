@@ -2,8 +2,13 @@ package Games.Quoridor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 import Games.Core.Board;
 import Games.Core.CoordPoint;
@@ -117,12 +122,12 @@ public class QuoridorBoard extends Board {
   // just for testing when we force a win with "w"
   public void setBoardToSolvedState() {
     player1.setPosition(player1.getGoalRow(), player1.getCol());
+    player2.setPosition(player2.getGoalRow(), player2.getCol());
   }
 
   /**
    * resets the number of remaining walls for each player and put them back in
    * their starting position
-   * // TODO: should this be in the QuoridorPlayer class instead?
    */
   public void resetPlayersToStart() {
     int startCol = board_cols / 2; // takes the floor to give correct index
@@ -158,9 +163,23 @@ public class QuoridorBoard extends Board {
    * @return list of valid [dr, dc] offset pairs
    */
   public List<CoordPoint> getValidMoves(QuoridorPlayer mover) {
+    return getValidMoves(mover, mover.getRow(), mover.getCol(), false);
+  }
+
+  /**
+   * returns all valid moves for a given player as a list of [dr, dc] pairs
+   *
+   * @param mover          the player whose valid moves we want
+   * @param currRow        the current row of player
+   * @param currCol        the current column of player
+   * @param ignoreOpponent should you ignore the opponent's when generating valid
+   *                       moves
+   * @return list of valid [dr, dc] offset pairs
+   */
+  public List<CoordPoint> getValidMoves(QuoridorPlayer mover, int currRow, int currCol, boolean ignoreOpponent) {
     List<CoordPoint> validMoves = new ArrayList<>();
-    int cr = mover.getRow();
-    int cc = mover.getCol();
+    int cr = currRow;
+    int cc = currCol;
 
     QuoridorPlayer other = (mover == player1) ? player2 : player1;
     int or = other.getRow();
@@ -179,7 +198,7 @@ public class QuoridorBoard extends Board {
         continue;
 
       // opponent is in the way — check for jumps
-      if (nr == or && nc == oc) {
+      if (nr == or && nc == oc && !ignoreOpponent) {
         int jumpR = nr + dr;
         int jumpC = nc + dc;
 
@@ -291,17 +310,61 @@ public class QuoridorBoard extends Board {
       return false;
     }
 
-    // TODO: implement pathExists function and uncomment this code block
     // run BFS check for path existence and if it fails the unmark the edges
-    // if (!pathExists()) {
-    // edge1.setIsWall(false);
-    // edge2.setIsWall(false);
-    // System.out.println("You cannot completely trap a player with walls.");
-    // return false;
-    // }
+    if (!pathExists()) {
+      edge1.setIsWall(false);
+      edge2.setIsWall(false);
+      System.out.println("You cannot completely trap a player with walls.");
+      return false;
+    }
 
     currPlayer.useWall();
     return true;
+  }
+
+  /**
+   * checks if a path exists to the goal row for both players
+   * 
+   * @return true if path exists else false
+   */
+  private boolean pathExists() {
+    return pathExistsForPlayer(player1) && pathExistsForPlayer(player2);
+  }
+
+  /**
+   * checks if a path exists to the goal row for a particular player through BFS
+   * 
+   * @param player current player we're checking for
+   * @return true if path exists false otherwise
+   */
+  private boolean pathExistsForPlayer(QuoridorPlayer player) {
+    CoordPoint source = new CoordPoint(player.getRow(), player.getCol()); // won't be goal row because otherwise game is
+                                                                          // already over
+    int goalRow = player.getGoalRow();
+    boolean isFirstMove = true;
+
+    Set<CoordPoint> visitedCoords = new HashSet<>();
+    Queue<CoordPoint> q = new LinkedList<>();
+    q.add(source);
+
+    while (!q.isEmpty()) {
+      CoordPoint currPoint = q.remove();
+      if (visitedCoords.contains(currPoint))
+        continue;
+      visitedCoords.add(currPoint);
+
+      List<CoordPoint> validMovesOffsets = getValidMoves(player, currPoint.getRow(), currPoint.getCol(), !isFirstMove);
+      for (CoordPoint moveOffset : validMovesOffsets) {
+        CoordPoint neighbor = moveOffset.plus(currPoint);
+        if (neighbor.getRow() == goalRow)
+          return true;
+        if (!visitedCoords.contains(neighbor))
+          q.add(neighbor);
+      }
+
+      isFirstMove = false;
+    }
+    return false;
   }
 
   // toString
