@@ -353,33 +353,41 @@ public class QuoridorBoard extends Board {
    * @return true if path exists false otherwise
    */
   private boolean pathExistsForPlayer(QuoridorPlayer player) {
+    return minMovesToGoalForPlayer(player) >= 0;
+  }
+
+  private int minMovesToGoalForPlayer(QuoridorPlayer player) {
     CoordPoint source = new CoordPoint(player.getRow(), player.getCol()); // won't be goal row because otherwise game is
                                                                           // already over
     int goalRow = player.getGoalRow();
-    boolean isFirstMove = true;
+    if (source.getRow() == goalRow)
+      return 0;
 
     Set<CoordPoint> visitedCoords = new HashSet<>();
     Queue<CoordPoint> q = new LinkedList<>();
+    Map<CoordPoint, Integer> dist = new HashMap<>();
     q.add(source);
+    dist.put(source, 0);
 
     while (!q.isEmpty()) {
       CoordPoint currPoint = q.remove();
       if (visitedCoords.contains(currPoint))
         continue;
       visitedCoords.add(currPoint);
+      int currDist = dist.get(currPoint);
 
-      List<CoordPoint> validMovesOffsets = getValidMoves(player, currPoint.getRow(), currPoint.getCol(), !isFirstMove);
+      List<CoordPoint> validMovesOffsets = getValidMoves(player, currPoint.getRow(), currPoint.getCol(), currDist > 0);
       for (CoordPoint moveOffset : validMovesOffsets) {
         CoordPoint neighbor = moveOffset.plus(currPoint);
         if (neighbor.getRow() == goalRow)
-          return true;
-        if (!visitedCoords.contains(neighbor))
+          return currDist + 1;
+        if (!visitedCoords.contains(neighbor) && !dist.containsKey(neighbor)) {
+          dist.put(neighbor, currDist + 1);
           q.add(neighbor);
+        }
       }
-
-      isFirstMove = false;
     }
-    return false;
+    return -1;
   }
 
   // toString
@@ -395,6 +403,10 @@ public class QuoridorBoard extends Board {
   public String toString(QuoridorPlayer focusPlayer) {
     StringBuilder sb = new StringBuilder();
     Set<CoordPoint> highlightedMoves = new HashSet<>();
+    int p1MovesToGoal = minMovesToGoalForPlayer(player1);
+    int p2MovesToGoal = minMovesToGoalForPlayer(player2);
+    String p1MovesLabel = (p1MovesToGoal >= 0) ? String.valueOf(p1MovesToGoal) : "blocked";
+    String p2MovesLabel = (p2MovesToGoal >= 0) ? String.valueOf(p2MovesToGoal) : "blocked";
 
     if (focusPlayer != null) {
       for (CoordPoint moveOffset : getValidMoves(focusPlayer)) {
@@ -404,7 +416,9 @@ public class QuoridorBoard extends Board {
 
     // walls remaining stats
     sb.append("\n").append(player1.getPlayerName()).append(" walls: ").append(player1.getWallsRemaining()).append("\n")
+        .append("  moves to goal: ").append(p1MovesLabel).append("\n \n")
         .append(player2.getPlayerName()).append(" walls: ").append(player2.getWallsRemaining()).append("\n");
+    sb.append("  moves to goal: ").append(p2MovesLabel).append("\n");
 
     // column header
     sb.append("\n     ");
