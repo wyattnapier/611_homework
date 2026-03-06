@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import Games.Core.Board;
+import Games.Core.AnsiColor;
 import Games.Core.CoordPoint;
 import Games.Core.LineEndpoints;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
@@ -383,8 +384,19 @@ public class QuoridorBoard extends Board {
 
   // toString
   public String toString() {
-    String wallColor = "\u001B[33m"; // yellow for walls
+    return toString(null);
+  }
+
+  public String toString(QuoridorPlayer focusPlayer) {
     StringBuilder sb = new StringBuilder();
+    Set<CoordPoint> highlightedMoves = new HashSet<>();
+
+    if (focusPlayer != null) {
+      for (CoordPoint moveOffset : getValidMoves(focusPlayer)) {
+        highlightedMoves.add(moveOffset.plus(new CoordPoint(focusPlayer.getRow(), focusPlayer.getCol())));
+      }
+    }
+
     // walls remaining stats
     sb.append("\n").append(player1.getPlayerName()).append(" walls: ").append(player1.getWallsRemaining()).append("\n")
         .append(player2.getPlayerName()).append(" walls: ").append(player2.getWallsRemaining()).append("\n");
@@ -406,7 +418,7 @@ public class QuoridorBoard extends Board {
           CoordPoint p2 = new CoordPoint(r, c + 1);
           QuoridorEdge edge = endpointsToEdge.get(new LineEndpoints(p1, p2));
           if (edge.isWall()) {
-            sb.append(wallColor + edge.toString() + DotsAndBoxesOwnershipEnum.getReset());
+            sb.append(AnsiColor.wrap(AnsiColor.WALL, edge.toString()));
           } else {
             sb.append(edge.toString());
           }
@@ -423,7 +435,7 @@ public class QuoridorBoard extends Board {
           CoordPoint p2 = new CoordPoint(r + 1, c);
           QuoridorEdge vEdge = endpointsToEdge.get(new LineEndpoints(p1, p2));
           if (vEdge.isWall()) {
-            sb.append(wallColor + vEdge.toString() + DotsAndBoxesOwnershipEnum.getReset());
+            sb.append(AnsiColor.wrap(AnsiColor.WALL, vEdge.toString()));
           } else {
             sb.append(vEdge.toString());
           }
@@ -433,9 +445,11 @@ public class QuoridorBoard extends Board {
             boolean isPlayer2Here = (player2.getRow() == r && player2.getCol() == c);
 
             if (isPlayer1Here) {
-              sb.append(DotsAndBoxesOwnershipEnum.PLAYER1.getColor() + " 1" + DotsAndBoxesOwnershipEnum.getReset());
+              sb.append(AnsiColor.wrap(DotsAndBoxesOwnershipEnum.PLAYER1.getColor(), " 1"));
             } else if (isPlayer2Here) {
-              sb.append(DotsAndBoxesOwnershipEnum.PLAYER2.getColor() + " 2" + DotsAndBoxesOwnershipEnum.getReset());
+              sb.append(AnsiColor.wrap(DotsAndBoxesOwnershipEnum.PLAYER2.getColor(), " 2"));
+            } else if (highlightedMoves.contains(new CoordPoint(r, c))) {
+              sb.append(AnsiColor.wrap(AnsiColor.HIGHLIGHT, " +"));
             } else {
               sb.append("  ");
             }

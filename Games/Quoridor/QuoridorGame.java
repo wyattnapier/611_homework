@@ -2,6 +2,7 @@ package Games.Quoridor;
 
 import Games.Core.Game;
 import Games.Core.Player;
+import Games.Core.AnsiColor;
 import Games.Enums.DotsAndBoxesOwnershipEnum;
 import Games.Enums.MoveOutcomeEnum;
 
@@ -62,9 +63,11 @@ public class QuoridorGame extends Game {
    * @return turn outcome such as win, quit, or continue playing
    */
   public MoveOutcomeEnum playSingleMove() {
-    String color = (currentPlayer == player1) ? DotsAndBoxesOwnershipEnum.PLAYER1.getColor()
-        : DotsAndBoxesOwnershipEnum.PLAYER2.getColor();
-    String prompt = color + currentPlayer.getPlayerName() + DotsAndBoxesOwnershipEnum.getReset()
+    System.out.println(board.toString(currentPlayer));
+
+    DotsAndBoxesOwnershipEnum playerColor = (currentPlayer == player1) ? DotsAndBoxesOwnershipEnum.PLAYER1
+        : DotsAndBoxesOwnershipEnum.PLAYER2;
+    String prompt = AnsiColor.wrap(playerColor.getColor(), currentPlayer.getPlayerName())
         + ", what would you like to do?\n"
         + "  [m dr dc]          → move by offset (e.g. m 0 1 = right, m -1 0 = up)\n"
         + "  [w r1 c1 r2 c2]    → place a wall between vertices (r1,c1) and (r2,c2)\n"
