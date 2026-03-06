@@ -387,6 +387,11 @@ public class QuoridorBoard extends Board {
     return toString(null);
   }
 
+  private String wallSymbol(QuoridorEdge edge) {
+    boolean isVertical = edge.getEdgeEndpoints().p1.getCol() == edge.getEdgeEndpoints().p2.getCol();
+    return isVertical ? "┃" : "━━";
+  }
+
   public String toString(QuoridorPlayer focusPlayer) {
     StringBuilder sb = new StringBuilder();
     Set<CoordPoint> highlightedMoves = new HashSet<>();
@@ -418,7 +423,7 @@ public class QuoridorBoard extends Board {
           CoordPoint p2 = new CoordPoint(r, c + 1);
           QuoridorEdge edge = endpointsToEdge.get(new LineEndpoints(p1, p2));
           if (edge.isWall()) {
-            sb.append(AnsiColor.wrap(AnsiColor.WALL, edge.toString()));
+            sb.append(AnsiColor.wrap(AnsiColor.WALL, wallSymbol(edge)));
           } else {
             sb.append(edge.toString());
           }
@@ -435,7 +440,7 @@ public class QuoridorBoard extends Board {
           CoordPoint p2 = new CoordPoint(r + 1, c);
           QuoridorEdge vEdge = endpointsToEdge.get(new LineEndpoints(p1, p2));
           if (vEdge.isWall()) {
-            sb.append(AnsiColor.wrap(AnsiColor.WALL, vEdge.toString()));
+            sb.append(AnsiColor.wrap(AnsiColor.WALL, wallSymbol(vEdge)));
           } else {
             sb.append(vEdge.toString());
           }
