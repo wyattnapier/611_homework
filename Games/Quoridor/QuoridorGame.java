@@ -49,7 +49,7 @@ public class QuoridorGame extends Game {
       System.out.println(currentPlayer.getPlayerName() + " quit the game so " + winner.getPlayerName() + " wins!");
     }
     if (gameResult == MoveOutcomeEnum.WIN) {
-      QuoridorPlayer winner = (player1.getGoalRow() == player2.getRow()) ? player1 : player2;
+      QuoridorPlayer winner = (player1.getRow() == player1.getGoalRow()) ? player1 : player2;
       winner.incrementGamesWon();
       System.out.println(winner.getPlayerName() + " wins!");
     }
