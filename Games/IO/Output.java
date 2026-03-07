@@ -12,7 +12,7 @@ public class Output {
    */
   public void printWelcomeMessage() {
     System.out.println(
-        "\nWelcome to my board games! This program allows users to play multiple different types of board games such as Sliding Puzzle and Dots and Boxes.");
+        "\nWelcome to my board games! This program allows users to play multiple different types of board games such as Sliding Puzzle, Dots and Boxes, and Quoridor.");
   }
 
   /**
